@@ -1,0 +1,49 @@
+
+{% block title %}Formulario alta de coleccion{% endblock %}
+{% block head %}
+ 
+{% endblock %}
+{% block content %}
+  <h1>Inicio</h1>
+
+  <div class="content">
+    <div class="login-form">
+        <form action="/crear_coleccion"  method="post">
+            <div class="input-control">
+                <label for="model_name">
+                    <input type="text" name="model_name" placeholder="Nombre del modelo" required>
+                </label>
+            </div>
+
+            <div class="input-control">
+                <label for="description">
+                    <input type="text" name="description" placeholder="Descripcion" required>
+                </label>
+            </div>
+
+            <!--<div class="input-control">
+              <label for="imagenes">
+                  <input multiple type="file" name="imagenes">
+              </label>
+            </div> !-->
+
+            <div class="input-control">
+              <label for="glasses_type">
+                 <input type="checkbox" id="anteojos_sol" value="anteojos_sol"> Anteojos de sol<br>
+                 <input type="checkbox" id="anteojos_lectura" value="anteojos_lectura"> Anteojos de lectura<br>
+              </label>
+          </div>
+
+            <div class="input-control">
+              <label for="fecha">
+                  <input type="date" name="fecha" placeholder="Fecha" required>
+              </label>
+            </div>
+
+            <input type="submit" value="Guardar coleccion">
+        </form>
+    </div>
+</div>
+  
+
+{% endblock %}
