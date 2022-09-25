@@ -4,19 +4,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión</title>
+    <title>Acceso Negado</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gothic+A1&display=swap" rel="stylesheet">
+    <style>
+        body, html{
+            height: 100%;
+            font-family: "Gothic A1";
+        }
+    </style>
 </head>
+
+
 <body>
     <div class="d-flex justify-content-center align-items-center" style="height: 80%">
         <div class="text-center">
-            
+
+            <h1>{{ error_name }}</h1>
             <div class="content container-fluid">
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
@@ -32,24 +41,11 @@
                 {% endblock %}
                 
             </div>
+
+            <h5>{{ error_description }}</h5>
+            <p><a href="{{ url_for('home') }}">Volver al inicio</a></p>
+            
         </div>
     </div>
-
-    <h1>Autenticate</h1>
-    <form action="{{ url_for('auth_authenticate') }}" method="POST">
-        <div class="mb-3">
-            <label for="email">
-                <input class="form-control" type="text" name="email" placeholder="email" required>
-            </label>
-        </div>
-
-        <div class="mb-3">
-            <label for="password">
-                <input class="form-control" type="password" name="password" placeholder="Clave" required>
-            </label>
-        </div>
-
-        <input class="btn btn-outline-primary form-control" type="submit" value="Ingresar">
-    </form>
 </body>
 </html>

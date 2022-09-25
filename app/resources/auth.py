@@ -18,19 +18,16 @@ def authenticate():
     email = params["email"]
     password = params["password"]
     user = Usuario.find_user_by_email_first(email)
-    if user and user.activo and user.verify_password(user, password):
+    if user and user.verify_password(user, password):
         # sesion iniciada correctamente
-        print("funciono")
         session["user"] = user.email
         session["id"] = user.id
         flash("la sesion se inicio correctamente")
         return redirect(url_for("home"))
     else:
         # mail o contraseña invalidos
-        print("no funciono")
         flash("usuario o clave incorrecta")
         return redirect(url_for("auth_login"))
-
 
 def logout():
     user = authenticated(session)
