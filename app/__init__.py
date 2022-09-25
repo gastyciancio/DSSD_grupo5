@@ -8,7 +8,10 @@ from flask_cors import CORS
 from app.helpers import auth as helper_auth
 from app.helpers import handler
 from app.helpers.auth import authenticated
+from dotenv import load_dotenv
 
+
+load_dotenv()  # take environment variables from .env.
 
 
 def create_app(environment="development"):
