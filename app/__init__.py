@@ -6,7 +6,6 @@ from app.resources import coleccion
 from app.resources import auth
 from flask_cors import CORS
 from app.helpers import auth as helper_auth
-from app.resources import usuario
 from app.helpers import handler
 from app.helpers.auth import authenticated
 
@@ -37,16 +36,9 @@ def create_app(environment="development"):
     
     # Rutas de Consultas
 
-    app.add_url_rule("/crear_coleccion","coleccion_create",coleccion.collecion_create, methods=["POST"] )
     app.add_url_rule("/coleccion_index","coleccion_index",coleccion.index, methods=["GET"] )
-    app.add_url_rule("/usuarios", "usuario_index", usuario.index, methods=["POST", "GET"])
-    app.add_url_rule("/usuarios/nuevo", "usuario_create", usuario.create, methods=["POST"])
-    app.add_url_rule("/usuarios/update/<int:id>","usuario_update", usuario.update,methods=["POST", "GET"])
-    app.add_url_rule("/usuarios/delete/<int:id>", "usuario_delete", usuario.delete)
-    app.add_url_rule("/usuarios/show/<int:id>", "usuario_show", usuario.show)
-    app.add_url_rule("/usuarios/perfil", "usuario_perfil", usuario.verPerfil)
-    app.add_url_rule("/usuarios/perfilUpdate/<int:id>","usuario_update_perfil",usuario.updatePerfil,methods=["POST", "GET"])
-    app.add_url_rule("/usuarios/passwordUpdate/<int:id>","usuario_update_password",usuario.updatePassword,methods=["POST", "GET"])
+    app.add_url_rule("/crear_coleccion","coleccion_create",coleccion.create, methods=["POST"] )
+    app.add_url_rule("/borrar_coleccion/<int:id>","coleccion_destroy",coleccion.delete, methods=["POST"] )
 
      # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
