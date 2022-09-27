@@ -33,7 +33,7 @@ def index():
     print("aaaaaa", flush=True)
     print(response, flush=True)
 
-    return render_template("colecciones/colecciones.html")
+    return render_template("colecciones/create_collection.html")
 
 def collecion_create():
     params=request.form

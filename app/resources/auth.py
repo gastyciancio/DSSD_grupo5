@@ -22,11 +22,11 @@ def authenticate():
         # sesion iniciada correctamente
         session["user"] = user.email
         session["id"] = user.id
-        flash("la sesion se inicio correctamente")
+        flash("La sesión se inició correctamente")
         return redirect(url_for("home"))
     else:
         # mail o contraseña invalidos
-        flash("usuario o clave incorrecta")
+        flash("Usuario o contraseña incorrecta")
         return redirect(url_for("auth_login"))
 
 def logout():
@@ -35,6 +35,6 @@ def logout():
         abort(401)
     del session["user"]
     session.clear()
-    flash("La sesión se cerró correctamente.")
+    flash("La sesión se cerró correctamente")
 
     return redirect(url_for("auth_login"))

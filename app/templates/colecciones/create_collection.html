@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+{% include 'navbar.html' %} 
+
+<h1>Crear colección</h1>
+<div>
+    <div>
+        <form action="/crear_coleccion"  method="post">
+
+            <div class="form-check">
+                <label for="glasses_type">
+                   <input class="form-check-input" type="radio" name="glasses_type" id="anteojos_sol" value="anteojos_sol">
+                   <label class="form-check-label" for="anteojos_sol">Anteojos de sol </label>
+                </label>
+            </div>
+
+            <div class="form-check">
+                <label for="glasses_type">
+                    <input class="form-check-input" type="radio" name="glasses_type" id="anteojos_lectura" value="anteojos_lectura"> 
+                   <label class="form-check-label" for="anteojos_lectura">Anteojos de lectura </label>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="model_name">Nombre del modelo: </label>
+                <input class="form-control" type="text" id="model_name" name="model_name" placeholder="Ingrese el nombre del modelo" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Descripción: </label>
+                <input class="form-control" type="text" id="description" name="description" placeholder="Ingrese una descripción" required>
+            </div>
+
+            <!--<div class="input-control">
+              <label for="imagenes">
+                  <input multiple type="file" name="imagenes">
+              </label>
+            </div> !-->            
+
+            <div class="input-control">
+              <label for="fecha">
+                  <input type="date" name="fecha" placeholder="Fecha" required>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary"> Guardar </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
