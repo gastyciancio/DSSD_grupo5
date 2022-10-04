@@ -23,20 +23,20 @@ def index():
     reqSession.post(api_url, data=body, headers=headers)
     session["bonita_token"] = reqSession.cookies.get("X-Bonita-API-Token")
 
-    print("bonita token> " + session["bonita_token"], flush=True)
-    print("bonita JSESSION> " + reqSession.cookies.get("JSESSIONID"), flush=True)
+    print("bonita token: " + reqSession.cookies.get("X-Bonita-API-Token"), flush=True)
+    print("bonita JSESSION: " + reqSession.cookies.get("JSESSIONID"), flush=True)
 
     #Pegada para traer el proceso Glasses para obtener su ID
     #"http://localhost:8080/bonita/API/bpm/process?f=name=Glasses&p=0&c=1&o=version%20desc&f=activationState=ENABLED"
 
-    case_api_url = "http://localhost:8080/bonita/API/bpm/process?f=name=Glasses"
-    case_headers = { 'Content/type' : 'application/json', 'X-Bonita-API-Token' : session["bonita_token"], 'JSESSIONID' : reqSession.cookies.get("JSESSIONID")}
+    case_api_url = "http://localhost:8080/bonita/API/bpm/process?s=Glasses"
+    #case_headers = { "X-Bonita-API-Token" : session["bonita_token"] }
     
-    response = requests.get(case_api_url, headers=case_headers)
-
+    response = reqSession.get(case_api_url)
+    
     print("aaa", flush=True)
     print(response.status_code, flush=True)
-    print(response, flush=True)
+    print(response.json()[0]["id"], flush=True)
 
     return render_template("colecciones/create_collection.html")
 
