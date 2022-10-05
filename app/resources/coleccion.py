@@ -1,14 +1,9 @@
-from cgi import print_arguments
-from flask import redirect, render_template, request, url_for, session, abort
-import flask
+from flask import redirect, render_template, request, url_for, session
 from flask.helpers import flash
-from sqlalchemy.sql.expression import true
-#from app.resources.validadorColeccion import ValidarForm
 from app.db import db
 from app.models.coleccion import Coleccion
 
 import requests
-import json
 
 def index():
 
@@ -21,23 +16,20 @@ def index():
 
     #reqSession queda cargada con las cookies de la respuesta del post
     reqSession.post(api_url, data=body, headers=headers)
+
+    # Nos guardamos en la sesion la cookie con el token de bonita 
     session["bonita_token"] = reqSession.cookies.get("X-Bonita-API-Token")
 
-    print("bonita token> " + session["bonita_token"], flush=True)
-    print("bonita JSESSION> " + reqSession.cookies.get("JSESSIONID"), flush=True)
-
     #Pegada para traer el proceso Glasses para obtener su ID
-    #"http://localhost:8080/bonita/API/bpm/process?f=name=Glasses&p=0&c=1&o=version%20desc&f=activationState=ENABLED"
+    api_url = "http://localhost:8080/bonita/API/bpm/process?f=name=Glasses"
+    process =  reqSession.get(api_url).json()[0]
+    process_id = process["id"]
+    print(process_id)
 
-    case_api_url = "http://localhost:8080/bonita/API/bpm/process?f=name=Glasses"
-    case_headers = { 'Content/type' : 'application/json', 'X-Bonita-API-Token' : session["bonita_token"], 'JSESSIONID' : reqSession.cookies.get("JSESSIONID")}
-    
-    response = requests.get(case_api_url, headers=case_headers)
+    # Aca configuramos las variables de bonita e iniciamos la primera tarea
 
-    print("aaa", flush=True)
-    print(response.status_code, flush=True)
-    print(response, flush=True)
 
+    # Cargamos la vista del formulario
     return render_template("colecciones/create_collection.html")
 
 def collecion_create():
@@ -48,18 +40,22 @@ def collecion_create():
     mensaje="Se agrego la coleccion"
     flash(mensaje)
 
-
     #Bonita auth
-    reqSession = requests.Session()
-
     api_url = "http://localhost:8080/bonita/loginservice"
     headers =  {"Content-Type":"application/x-www-form-urlencoded"}
     body = {"username": "walter.bates", "password": "bpm", "redirect": False}
 
-    response = reqSession.post(api_url, data=body, headers=headers)
+    reqSession = requests.Session()
 
+    #reqSession queda cargada con las cookies de la respuesta del post
+    reqSession.post(api_url, data=body, headers=headers)
+
+    # Nos guardamos en la sesion la cookie con el token de bonita 
     session["bonita_token"] = reqSession.cookies.get("X-Bonita-API-Token")
 
     #Pegada de crear tarea colleccion
 
+
+
+    # Volvemos a la pantalla de inicio
     return redirect(url_for("home"))
