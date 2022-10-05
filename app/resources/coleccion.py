@@ -17,19 +17,37 @@ def index():
     #reqSession queda cargada con las cookies de la respuesta del post
     reqSession.post(api_url, data=body, headers=headers)
 
-    # Nos guardamos en la sesion la cookie con el token de bonita 
+    #Nos guardamos en la sesion la cookie con el token de bonita 
     session["bonita_token"] = reqSession.cookies.get("X-Bonita-API-Token")
 
     #Pegada para traer el proceso Glasses para obtener su ID
     api_url = "http://localhost:8080/bonita/API/bpm/process?f=name=Glasses"
     process =  reqSession.get(api_url).json()[0]
     process_id = process["id"]
-    print(process_id)
+    print(process_id, flush=True)
 
-    # Aca configuramos las variables de bonita e iniciamos la primera tarea
+    #-------------------------------------------------------------------------------------------
+
+    #Bonita Auth
+    api_url = "http://localhost:8080/bonita/loginservice"
+    headers =  {"Content-Type":"application/x-www-form-urlencoded"}
+    body = {"username": "walter.bates", "password": "bpm", "redirect": False}
+
+    reqSession.post(api_url, data=body, headers=headers)
+    session["bonita_token"] = reqSession.cookies.get("X-Bonita-API-Token")
+
+    #Pegada para instanciar el proceso a partir del ID recuperado
+    api_url = "http://localhost:8080/bonita/API/bpm/process/" + process_id + "/instantiation"
+    headers = {"X-Bonita-API-Token": session["bonita_token"]}
+    reqSession.post(api_url, headers=headers)
+    
 
 
-    # Cargamos la vista del formulario
+
+    #Aca configuramos las variables de bonita e iniciamos la primera tarea
+
+
+    #Cargamos la vista del formulario
     return render_template("colecciones/create_collection.html")
 
 def collecion_create():
