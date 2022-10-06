@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 class Image(db.Model):
     __tablename__="image_table"
     id = db.Column(db.Integer,primary_key=True)
-    img = db.Column(db.LargeBinary, nullable=False)
+    img = db.Column(db.LargeBinary(length=(2**24)-1), nullable=False)
     name = db.Column(db.Text, nullable=False)
     mimetype = db.Column(db.Text, nullable=False)
     coleccion_id = Column(Integer, ForeignKey("coleccion_table.id"))
