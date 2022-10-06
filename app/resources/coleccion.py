@@ -17,11 +17,21 @@ def index():
 
 def collecion_create():
     params=request.form
+    if (params['model_name'] == '' or params['model_name'] == None):
+        mensaje='Falta el nombre de la coleccion'
+        flash(mensaje)
+        return render_template("/colecciones/create_collection.html")
+    if (params['fecha'] == '' or params['fecha'] == None):
+        mensaje='Falta la fecha de la coleccion'
+        flash(mensaje)
+        return render_template("/colecciones/create_collection.html")
+    
     nueva_coleccion=Coleccion(nombre=params['model_name'],descripcion=params['description'],fecha=params['fecha'],tipo=params['glasses_type'])
     db.session.add(nueva_coleccion)
     db.session.commit()
     mensaje='Se agrego la coleccion'
     flash(mensaje)
+    
     set_collection_id_bonita_variable(nueva_coleccion.id)
 
     # Crear imagenes y agregarlas a esa coleccion
@@ -33,9 +43,8 @@ def collecion_create():
         Image.save_images(imgs, nueva_coleccion.id)
 
 
-    allCollections = Coleccion.getAll()
-    return render_template("home.html", cols=allCollections)
-
+    return render_template("/colecciones/create_collection.html")
+    
     #return redirect(url_for('home'))
     #i=Image.query.filter_by(id=33).first()
     #return Response(i.img, mimetype=i.mimetype)

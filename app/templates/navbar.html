@@ -25,4 +25,26 @@
     </div>
   </nav>
 
+
+<div class="d-flex justify-content-center align-items-center" >
+  <div class="text-center">
+      
+      <div class="content container-fluid">
+          {% with messages = get_flashed_messages() %}
+              {% if messages %}
+              <div class="message">
+                  {% for message in messages %}
+                  <div class="alert alert-primary">{{ message }}</div>
+                  {% endfor %}
+              </div>
+              {% endif %}
+          {% endwith %}
+  
+          {% block content %}
+          {% endblock %}
+          
+      </div>
+  </div>
+</div>
+
 {% endblock %}
