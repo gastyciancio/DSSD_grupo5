@@ -7,6 +7,7 @@ from app.models.image import Image
 
 
 import requests
+import json
 
 def index():
 
@@ -60,9 +61,15 @@ def start_bonita_process():
     #-------------------------------------------------------------------------------------------
 
     #Pegada para instanciar el proceso a partir del ID recuperado
-    api_url = "http://localhost:8080/bonita/API/bpm/process/" + process_id + "/instantiation"
+    api_url = "http://localhost:8080/bonita/API/bpm/case"
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
-    case_id =  reqSession.post(api_url, headers=headers).json()['caseId']
+    variables = [{'name': 'collection_id', 'value':'' }]
+    body = {
+        "processDefinitionId":process_id,
+        "variables": variables
+    }
+    body = json.dumps(body)
+    case_id =  reqSession.post(api_url, data=body, headers=headers).json()['id']
     session['case_id'] = case_id
 
 def set_collection_id_bonita_variable(collection_id):
@@ -83,7 +90,12 @@ def set_collection_id_bonita_variable(collection_id):
     case_id = session['case_id']
 
     #Pegada para guardar el id de la coleccion en una variable de bonita
-    api_url = "http://localhost:8080/bonita/API/bpm/caseVariable/" + str(case_id) + "/pepe"
+    api_url = "http://localhost:8080/bonita/API/bpm/caseVariable/" + str(case_id) + "/collection_id"
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
-    body = { 'type':'java.lang.String', 'value':collection_id }
-    variable =  reqSession.put(api_url, data=body, headers=headers).json()
+    body = { 'type':'java.lang.String', 'value':str(collection_id) }
+    body = json.dumps(body)
+    variable =  reqSession.put(api_url, data=body, headers=headers)
+    print(variable.status_code, flush=True)
+    
+    api_url = "http://localhost:8080/bonita/API/bpm/caseVariable?f=case_id=" + str(case_id)
+    print(reqSession.get(api_url, headers=headers).json(), flush=True)
