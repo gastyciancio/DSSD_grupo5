@@ -3,6 +3,25 @@
 {% block body %}
 
 {% include 'navbar.html' %} 
+
+<table class="table table-bordered table-hover mt-5">
+    <thead class="thead-dark">
+        <tr>
+            <th class="text-center" scope="col">Nombre</th>
+            <th class="text-center" scope="col">Tipo</th>
+            <th class="text-center" scope="col">Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for col in cols %}
+            <tr>
+                <td class="text-center" scope="row">{{col.nombre}}</td>
+                <td class="text-center" scope="row">{{col.tipo}}</td>
+                <td class="text-center" scope="row">{{col.fecha}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 <!--
   <h1>Inicio</h1>
   

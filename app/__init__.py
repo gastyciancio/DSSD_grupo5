@@ -9,7 +9,7 @@ from app.helpers import auth as helper_auth
 from app.resources import usuario
 from app.helpers import handler
 from app.helpers.auth import authenticated
-
+from app.models.coleccion import Coleccion
 
 
 def create_app(environment="development"):
@@ -36,7 +36,6 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(tiene_permiso=helper_auth.check_permission)
     
     # Rutas de Consultas
-
     app.add_url_rule("/crear_coleccion","coleccion_create",coleccion.collecion_create, methods=["POST"] )
     app.add_url_rule("/coleccion_index","coleccion_index",coleccion.index, methods=["GET"] )
     app.add_url_rule("/usuarios", "usuario_index", usuario.index, methods=["POST", "GET"])
@@ -55,7 +54,6 @@ def create_app(environment="development"):
         "/autenticacion", "auth_authenticate", auth.authenticate, methods=["POST"]
     )
 
-
     # Ruta para el Home (usando decorator)
     @app.route("/")
     def home():
@@ -63,7 +61,8 @@ def create_app(environment="development"):
         if not user:
             return redirect(url_for("auth_login"))
         else:
-            return render_template("home.html")
+            allCollections = Coleccion.getAll()
+            return render_template("home.html", cols=allCollections)
     
     # Rutas de API-REST (usando Blueprints)
    

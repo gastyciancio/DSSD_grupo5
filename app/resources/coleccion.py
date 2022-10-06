@@ -1,7 +1,10 @@
-from flask import redirect, render_template, request, url_for, session
+from typing import Collection
+from flask import redirect, render_template, request, url_for, session, Response
 from flask.helpers import flash
 from app.db import db
 from app.models.coleccion import Coleccion
+from app.models.image import Image
+
 
 import requests
 
@@ -21,8 +24,18 @@ def collecion_create():
     flash(mensaje)
     set_collection_id_bonita_variable(nueva_coleccion.id)
 
+    # Crear imagenes y agregarlas a esa coleccion
+    imgs = request.files.getlist('images')
+    Image.save_images(imgs, nueva_coleccion.id)
+
+    allCollections = Coleccion.getAll()
     # Volvemos a la pantalla de inicio
-    return redirect(url_for('home'))
+    return render_template("home.html", cols=allCollections)
+    
+    #return redirect(url_for('home'))
+    #i=Image.query.filter_by(id=33).first()
+    #return Response(i.img, mimetype=i.mimetype)
+
 
 def start_bonita_process():
 
@@ -74,6 +87,3 @@ def set_collection_id_bonita_variable(collection_id):
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
     body = { 'type':'java.lang.String', 'value':collection_id }
     variable =  reqSession.put(api_url, data=body, headers=headers).json()
-
-  
-
