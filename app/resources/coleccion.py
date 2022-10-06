@@ -44,11 +44,6 @@ def collecion_create():
 
 
     return render_template("/colecciones/create_collection.html")
-    
-    #return redirect(url_for('home'))
-    #i=Image.query.filter_by(id=33).first()
-    #return Response(i.img, mimetype=i.mimetype)
-
 
 def start_bonita_process():
 
