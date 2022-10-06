@@ -1,4 +1,3 @@
-from typing import Collection
 from flask import redirect, render_template, request, url_for, session, Response
 from flask.helpers import flash
 from app.db import db
@@ -27,12 +26,16 @@ def collecion_create():
 
     # Crear imagenes y agregarlas a esa coleccion
     imgs = request.files.getlist('images')
-    Image.save_images(imgs, nueva_coleccion.id)
+    
+    if(len(imgs) == 1 and imgs[0].filename == ''):
+        print("No se agregaron imagenes", flush=True)
+    else:
+        Image.save_images(imgs, nueva_coleccion.id)
+
 
     allCollections = Coleccion.getAll()
-    # Volvemos a la pantalla de inicio
     return render_template("home.html", cols=allCollections)
-    
+
     #return redirect(url_for('home'))
     #i=Image.query.filter_by(id=33).first()
     #return Response(i.img, mimetype=i.mimetype)
