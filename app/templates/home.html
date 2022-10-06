@@ -22,27 +22,5 @@
         {% endfor %}
     </tbody>
 </table>
-<!--
-  <h1>Inicio</h1>
-  
-  <nav>
-    <div>    
-        <ul >
-            <li>
-                <a class="nav-link {{'active' if request.endpoint == 'home'}}" aria-current="page" href="{{url_for('home')}}">Home</a>
-            </li>
-            {% if tiene_permiso(session["id"], "create_collection") %}
-            <li >
-                <a class="nav-link {{'active' if request.endpoint == '/coleccion_index'}}" href="{{url_for('coleccion_index')}}">Crear colección</a>
-            </li>
-            {% endif %}
-            <li >
-                <a class="nav-link" href="{{url_for('auth_logout')}}" style="color: red;">Cerrar sesión</a>
-            </li>
-        </ul>      
-    </div>
-</nav>
--->
-
 
 {% endblock %}
