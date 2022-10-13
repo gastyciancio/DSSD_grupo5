@@ -1,8 +1,7 @@
-import re
-from typing import Collection
 from app.db import db
 from sqlalchemy import Column,Integer,String
 from sqlalchemy.orm import relationship
+from app.models.model import Model #dejarlo
 
 
 class Coleccion(db.Model):
@@ -13,6 +12,7 @@ class Coleccion(db.Model):
     nombre=Column(String(255))
     fecha=Column(String(255))
     images = relationship("Image", backref="coleccion")
+    models = relationship("Model", backref="coleccion")
 
     def __init__(self,tipo=None,descripcion=None,nombre=None,fecha=None):
         self.tipo=tipo
@@ -23,3 +23,19 @@ class Coleccion(db.Model):
     @classmethod
     def getAll(cls):
         return Coleccion.query.all()
+
+    @classmethod
+    def save_collection(cls, params):
+
+        new_collection = Coleccion(
+            nombre=params['model_name'],
+            descripcion=params['description'],
+            fecha=params['fecha'],
+            tipo=params['glasses_type']
+        )
+
+        db.session.add(new_collection)
+        db.session.commit()
+
+        return new_collection
+    
