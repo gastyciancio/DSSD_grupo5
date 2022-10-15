@@ -1,0 +1,11 @@
+#menu{
+    text-align: center;
+}
+
+.menu-item{
+    width: 80%;
+    padding: 10px;
+    text-align: center;
+    margin: 0 auto 5px auto;
+    background-color: rgb(236, 236, 236);
+}

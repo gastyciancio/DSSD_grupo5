@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<!--
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1&display=swap" rel="stylesheet">
+</head>
+-->
+    <div class="d-flex justify-content-center align-items-center" >
+        <div class="text-center">
+            
+            <div class="content container-fluid">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <div class="message">
+                        {% for message in messages %}
+                        <div class="alert alert-primary">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                {% endwith %}
+        
+                {% block content %}
+                {% endblock %}
+                
+            </div>
+        </div>
+    </div>
+
+    <h1>Iniciar sesión</h1>
+    <form action="{{ url_for('auth_authenticate') }}" method="POST">
+
+        <div class="form-group">
+            <label for="email">Email: </label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese un email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña: </label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese una contraseña" required>
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Ingresar">
+    </form>
+
+{% endblock %}
