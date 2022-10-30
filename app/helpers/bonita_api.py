@@ -7,7 +7,7 @@ def bonita_auth():
 
     api_url = 'http://localhost:8080/bonita/loginservice'
     headers =  {'Content-Type':'application/x-www-form-urlencoded'}
-    body = {'username': 'walter.bates', 'password': 'bpm', 'redirect': False}
+    body = {'username': session['username'], 'password': session['password'], 'redirect': False}
 
     #reqSession queda cargada con las cookies de la respuesta del post
     res = reqSession.post(api_url, data=body, headers=headers)

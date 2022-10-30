@@ -1,9 +1,10 @@
 from app.models.usuario import Usuario
-from app.models.usuario_tiene_rol import usuario_tiene_rol
+from flask import session
+from app.helpers.bonita_api import bonita_auth
 
 
 def authenticated(session):
-    return session.get("user")
+    return session.get("username")
 
 
 def check_permission(user_id, permission):
@@ -11,6 +12,29 @@ def check_permission(user_id, permission):
         return Usuario.has_permission(user_id,permission)
     else:
         return False
-    
-def isAdmin(anID):
-    return usuario_tiene_rol.find_by_id(anID) > 0
+
+def check_permission_bonita(permission):
+    if authenticated(session):
+        reqSession = bonita_auth()
+        api_url = 'http://localhost:8080/bonita/API/identity/user?p=0&c=10'
+        users = (reqSession.get(api_url)).json()
+        usuario_id = None
+        for user in users:
+            if (user['userName'] == session['username']):
+                usuario_id = user['id']
+                break
+        if usuario_id == None:
+            return False
+        else:
+            api_url = 'http://localhost:8080/bonita/API/identity/membership?f=user_id='+ str(usuario_id)
+            tiene_permiso = False
+            membresias = (reqSession.get(api_url)).json()
+            for membresia in membresias:
+                api_url = 'http://localhost:8080/bonita/API/identity/role/'+ membresia['role_id']
+                rol = (reqSession.get(api_url)).json()
+                if (rol['name'].lower() == 'admin'):
+                    tiene_permiso = True
+                    break
+            return tiene_permiso
+    else:
+        return False

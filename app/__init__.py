@@ -32,8 +32,7 @@ def create_app(environment="development"):
     #app.jinja_env.globals.update(is_authenticated=helper_auth.authenticated)
      # Funciones que se exportan al contexto de Jinja2
     app.jinja_env.globals.update(is_authenticated=helper_auth.authenticated)
-    # app.jinja_env.globals.update(isAdmin=helper_auth.isAdmin)
-    app.jinja_env.globals.update(tiene_permiso=helper_auth.check_permission)
+    app.jinja_env.globals.update(tiene_permiso=helper_auth.check_permission_bonita)
     
     # Rutas de Consultas
     app.add_url_rule("/crear_coleccion","coleccion_create",coleccion.collecion_create, methods=["POST"] )

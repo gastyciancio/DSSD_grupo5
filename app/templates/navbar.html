@@ -11,7 +11,7 @@
           <a class="navbar-brand {{'active' if request.endpoint == 'home'}}" aria-current="page" href="{{url_for('home')}}" >Inicio</a>
         </li>
 
-        {% if tiene_permiso(session["id"], "create_collection") %}
+        {% if tiene_permiso("admin") %}
         <li class="nav-item active">
           <a class="nav-link {{'active' if request.endpoint == '/coleccion_index'}}" href="{{url_for('coleccion_index')}}" >Crear colección</a>
         </li>
