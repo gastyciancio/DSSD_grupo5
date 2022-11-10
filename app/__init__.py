@@ -10,6 +10,7 @@ from app.resources import usuario
 from app.helpers import handler
 from app.helpers.auth import authenticated
 from app.models.coleccion import Coleccion
+from app.resources import provider
 
 
 def create_app(environment="development"):
@@ -45,6 +46,9 @@ def create_app(environment="development"):
     app.add_url_rule("/usuarios/perfil", "usuario_perfil", usuario.verPerfil)
     app.add_url_rule("/usuarios/perfilUpdate/<int:id>","usuario_update_perfil",usuario.updatePerfil,methods=["POST", "GET"])
     app.add_url_rule("/usuarios/passwordUpdate/<int:id>","usuario_update_password",usuario.updatePassword,methods=["POST", "GET"])
+    app.add_url_rule("/form_proveedores", "providers_form",provider.index, methods=["GET"] )
+    app.add_url_rule("/search_proveedores", "providers_search", provider.search ,methods=["POST"])
+    app.add_url_rule("/reserve_proveedores", "providers_reserve", provider.reserve ,methods=["POST"])
 
      # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
