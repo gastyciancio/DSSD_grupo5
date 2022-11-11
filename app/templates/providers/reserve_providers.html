@@ -4,7 +4,71 @@
 
 {% include 'navbar.html' %} 
 
-<h1 class="mt-3">Elegir proveedores</h1>
+{% if materiales_con_prov != [] %}
+    <h1 class="mt-3">Elegir proveedores</h1>
+    <h2 class="mt-3">Materiales con proveedor</h2>
+
+    <div class="mt-3">
+        <div>
+            <form action="/reserve_proveedores" enctype="multipart/form-data"  method="post">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Proveedor</td>
+                            <td>Fecha de entrega</td>
+                            <td>Material</td>
+                            <td>Precio por kilo</td>
+                            <td>Seleccionar</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for provider in materiales_con_prov %}
+                            {%for material in provider['materials'] %}
+                            <tr>
+                                <td>{{provider['name'].capitalize()}}</td>
+                                <td>{{material['date_deliver']}}</td>
+                                <td>{{material['name'].capitalize()}}</td>
+                                <td>{{material['price_per_kg']}}</td>
+                                <td>
+                                    <input type="checkbox" id="seleccionar_proveedor" name="seleccionar_proveedor" value="{{[provider['id'],material['id'],material['amount']]}}">
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                 <button type="submit" class="btn btn-primary mt-3"> Reservar </button>
+            </form>
+        </div>
+    </div>
+{% endif %}
+
+
+
+{% if materiales_sin_prov != [] %}
+    <h2 class="mt-3">Materiales sin proveedor</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Nombre</td>
+                <td>Cantidad solicitada</td>
+                <td>Fecha solicitada</td>
+            </tr>
+        </thead>
+        <tbody>
+            {%for provider in materiales_sin_prov %}
+            <tr>
+                <td>{{provider['name'].capitalize()}}</td>
+                <td>{{provider['amount']}}</td>
+                <td>{{provider['date_required']}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+<h1 class="mt-3">Renegociar</h1>
+
 <div class="mt-3">
     <div>
         <form action="/search_proveedores" enctype="multipart/form-data"  method="post">
@@ -25,49 +89,5 @@
         </form>
     </div>
 </div>
-
-<h2 class="mt-3">Materiales con proveedor</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <td>Supplier</td>
-            <td>Date deliver</td>
-            <td>Material</td>
-            <td>Price per kg</td>
-        </tr>
-    </thead>
-    <tbody>
-        {%for provider in materiales_con_prov %}
-            {%for material in provider['materials'] %}
-            <tr>
-                <td>{{provider['name']}}</td>
-                <td>{{material['date_deliver']}}</td>
-                <td>{{material['name']}}</td>
-                <td>{{material['price_per_kg']}}</td>
-            </tr>
-            {% endfor %}
-        {% endfor %}
-    </tbody>
-</table>
-
-<h2 class="mt-3">Materiales sin proveedor</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <td>Name</td>
-            <td>Amount</td>
-            <td>Date_required</td>
-        </tr>
-    </thead>
-    <tbody>
-        {%for provider in materiales_sin_prov %}
-        <tr>
-            <td>{{provider['name']}}</td>
-            <td>{{provider['amount']}}</td>
-            <td>{{provider['date_required']}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
 
 {% endblock %}
