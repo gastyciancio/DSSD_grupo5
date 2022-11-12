@@ -11,6 +11,7 @@ from app.helpers import handler
 from app.helpers.auth import authenticated
 from app.models.coleccion import Coleccion
 from app.resources import provider
+from app.resources import maker
 
 
 def create_app(environment="development"):
@@ -49,6 +50,9 @@ def create_app(environment="development"):
     app.add_url_rule("/form_proveedores", "providers_form",provider.index, methods=["GET"] )
     app.add_url_rule("/search_proveedores", "providers_search", provider.search ,methods=["POST"])
     app.add_url_rule("/reserve_proveedores", "providers_reserve", provider.reserve ,methods=["POST"])
+    app.add_url_rule("/form_fabricantes", "makers_form",maker.index, methods=["GET"] )
+    app.add_url_rule("/search_fabricantes", "makers_search", maker.search ,methods=["POST"])
+    app.add_url_rule("/reserve_fabricantes", "makers_reserve", maker.reserve ,methods=["POST"])
 
      # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)

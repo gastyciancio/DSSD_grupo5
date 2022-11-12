@@ -110,5 +110,5 @@ def reserve():
         for message in response['response']:
             flash(message)
     else:
-        flash('Fallo la reserva')
+        flash('Fallo la reserva de proveedores')
     return redirect(url_for("providers_form"))
