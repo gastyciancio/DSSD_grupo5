@@ -13,6 +13,7 @@ class Coleccion(db.Model):
     fecha=Column(String(255))
     images = relationship("Image", backref="coleccion")
     models = relationship("Model", backref="coleccion")
+    rutas = relationship("Ruta", backref="coleccion")
 
     def __init__(self,tipo=None,descripcion=None,nombre=None,fecha=None):
         self.tipo=tipo

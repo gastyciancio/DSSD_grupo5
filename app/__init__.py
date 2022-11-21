@@ -12,6 +12,7 @@ from app.helpers.auth import authenticated
 from app.models.coleccion import Coleccion
 from app.resources import provider
 from app.resources import maker
+from app.resources import ruta
 
 
 def create_app(environment="development"):
@@ -53,6 +54,8 @@ def create_app(environment="development"):
     app.add_url_rule("/form_fabricantes", "makers_form",maker.index, methods=["GET"] )
     app.add_url_rule("/search_fabricantes", "makers_search", maker.search ,methods=["POST"])
     app.add_url_rule("/reserve_fabricantes", "makers_reserve", maker.reserve ,methods=["POST"])
+    app.add_url_rule("/form_rutas", "rutas_form",ruta.index, methods=["GET"] )
+    app.add_url_rule("/crear_rutas", "rutas_create", ruta.ruta_create ,methods=["POST"])
 
      # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)

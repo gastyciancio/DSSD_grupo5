@@ -78,3 +78,21 @@ def set_case_variable(var_name, var_value):
     
     api_url = "http://localhost:8080/bonita/API/bpm/caseVariable?f=case_id=" + str(case_id)
     print(reqSession.get(api_url, headers=headers).json(), flush=True)
+
+#Setea una variable en el case con id guardado en la sesion
+#Si se hacen varios set, se hacen todos sobre el mismo case
+def get_case_variable_value(var_name):
+    
+    reqSession = bonita_auth()
+    case_id = session['case_id']
+
+    api_url = "http://localhost:8080/bonita/API/bpm/caseVariable/" + str(case_id) + var_name
+    headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
+
+    res = reqSession.get(api_url, headers=headers)
+    if(res.status_code < 200 or res.status_code > 299):
+        print("Fallo en get case variable", flush=True)
+        return None
+    else:
+        print("get case variable exitoso", flush=True)
+        return res.json()['value']
