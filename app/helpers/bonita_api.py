@@ -96,3 +96,66 @@ def get_case_variable_value(var_name):
     else:
         print("get case variable exitoso", flush=True)
         return res.json()['value']
+
+def current_user_id():
+    
+    reqSession = bonita_auth()
+    api_url = 'http://localhost:8080/bonita/API/identity/user?p=0&c=10'
+    users = (reqSession.get(api_url)).json()
+    usuario_id = None
+    for user in users:
+        if (user['userName'] == session['username']):
+            usuario_id = user['id']
+            break
+    return usuario_id
+   
+
+# EJEMPLO: execute_next_task('userTask','Planificar colección, fecha y plazos') SE PONE EL NOMBRE DE LA TAREA DONDE ESTAMOS PARADOS
+def execute_next_task(type_task='userTask', name='poner nombre de tarea'):
+    reqSession = bonita_auth()
+    case_id = session['case_id']
+
+    api_url = "http://localhost:8080/bonita/API/bpm/" + str(type_task) +'?f=caseId='+str(case_id)+'&f=name='+name
+    headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
+
+    res = reqSession.get(api_url, headers=headers)
+    if(res.status_code < 200 or res.status_code > 299):
+        print("Fallo en traer tarea", flush=True)
+    else:
+        print("Traer tarea exitosa", flush=True)
+        breakpoint()
+        tarea = res.json()[0]
+        id_tarea = tarea['id']
+
+        api_url = "http://localhost:8080/bonita/API/bpm/" + str(type_task) +'/'+id_tarea
+        headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
+        body = {
+            "assigned_id":current_user_id()
+        }
+        
+        body = json.dumps(body) 
+        res = reqSession.put(api_url, data=body, headers=headers)
+        if(res.status_code < 200 or res.status_code > 299):
+            print("Fallo asignar tarea", flush=True)
+        else:
+            print("Asignacion de tarea al usuario actual exitosa", flush=True)
+
+            reqSession = bonita_auth()
+            api_url = "http://localhost:8080/bonita/API/bpm/" + str(type_task) +'/'+id_tarea+'/execution'
+            headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
+
+            res = reqSession.post(api_url, headers=headers)
+            if(res.status_code < 200 or res.status_code > 299):
+                print("Fallo en ejecutar siguiente tarea", flush=True)
+            else:
+                print("Ejecuto tarea exitosamente", flush=True)
+                api_url = "http://localhost:8080/bonita/API/bpm/" + str(type_task) +'?f=caseId='+str(case_id)
+                headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
+
+                res = reqSession.get(api_url, headers=headers)
+                if(res.status_code < 200 or res.status_code > 299):
+                    print("Fallo en traer tareas despues de ejecutar siguiente", flush=True)
+                    return None
+                else:
+                    print("Traer tareas exitosa despues de ejecutar siguiente", flush=True)
+                    return res.json()
