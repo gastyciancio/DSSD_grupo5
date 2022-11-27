@@ -38,6 +38,8 @@ def create_app(environment="development"):
     # Rutas de Consultas
     app.add_url_rule("/crear_coleccion","coleccion_create",coleccion.collecion_create, methods=["POST"] )
     app.add_url_rule("/coleccion_index","coleccion_index",coleccion.index, methods=["GET"] )
+    app.add_url_rule("/establecer_materiales_y_cantidades","set_materials_and_quantities",coleccion.set_materials_and_quantities, methods=["POST"] )
+    app.add_url_rule("/establecer_materiales_y_cantidades_index","set_materials_and_quantities_index",coleccion.set_materials_and_quantities_index, methods=["GET"] )
     app.add_url_rule("/usuarios", "usuario_index", usuario.index, methods=["POST", "GET"])
     app.add_url_rule("/usuarios/nuevo", "usuario_create", usuario.create, methods=["POST"])
     app.add_url_rule("/usuarios/update/<int:id>","usuario_update", usuario.update,methods=["POST", "GET"])
