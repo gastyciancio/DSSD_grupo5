@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+{% include 'navbar.html' %} 
+<h1 class="mt-3">Crear colección - Establecer Materiales</h1>
+<div class="mt-3">
+    <div>
+        <div class="w-25 d-flex">
+            <p class="mt-4 h3">Modelos a incluir:</p>
+        </div>
+        <div class="border border-grey p-2">
+            <table class="table table-bordered mt-3">
+                <thead class="table-info">
+                    <tr>
+                        <th class="text-center" scope="col">Nombre: </th>
+                        <th class="text-center" scope="col">Descripción: </th>
+                        <th class="text-center" scope="col">Tipo: </th>
+                    </tr>            
+                </thead>  
+                <tbody>   
+                    {% for model in col.models %}
+                        <tr>
+                            <td class="text-center" scope="row">{{model.name}}</td>
+                            <td class="text-center" scope="row">{{model.description}}</td>
+                            <td class="text-center" scope="row">{{model.type}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>                
+
+        <form action="/establecer_materiales_y_cantidades" enctype="multipart/form-data"  method="post">
+            <div class="mt-3">
+                <h5>¿Es correcta la carga de la colección?</h5>
+                <input type="radio" id="yes" name="decition" value="yes" checked onclick="clicked()"/>
+                <label for="yes">Sí</label>
+                <input type="radio" id="no" name="decition" value="no" onclick="clicked()"/>
+                <label for="no">No</label>
+            </div>
+
+            <div id="materials">
+                <input type="hidden" name="collectionId" value={{col.id}}>
+                <div class="float-left mt-3" style="width: 40%;">
+                    <h5>Materiales a usar en los modelos: </h5>
+                    <div class="mb-2">Vidrio</div>         
+                    <div class="mb-2">Madera</div>
+                    <div class="mb-2">Plástico</div>
+                    <div class="mb-2">Policarbonato</div>
+                </div>
+                <div class="float-left mt-3 mr-5">
+                    <h5> Cantidades en kilos a usar: </h5>
+                    <input class="mb-1" type="number" name="vidrio" min="0" value="0"><br>
+                    <input class="mb-1" type="number" name="madera" min="0" value="0"><br>
+                    <input class="mb-1" type="number" name="plastico" min="0" value="0"><br>
+                    <input class="mb-1" type="number" name="policarbonato" min="0" value="0">
+                </div>
+            </div>
+
+                <button type="submit" class="btn btn-primary mt-5 col"> Guardar </button>
+            
+        </form>       
+    </div>
+
+    <script>
+        
+        function clicked(){
+            const yes = document.getElementById("yes").checked;
+            const form_materials = document.getElementById("materials");
+        
+            if(yes){
+                form_materials.style.display = "block";
+            }else{
+                form_materials.style.display = "none";
+            }
+        }
+          
+
+    </script>
+
+</div>
+
+{% endblock %}

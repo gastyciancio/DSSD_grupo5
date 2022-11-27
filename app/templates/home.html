@@ -4,23 +4,36 @@
 
 {% include 'navbar.html' %} 
 
-<table class="table table-bordered table-hover mt-5">
-    <thead class="thead-dark">
-        <tr>
-            <th class="text-center" scope="col">Nombre</th>
-            <th class="text-center" scope="col">Tipo</th>
-            <th class="text-center" scope="col">Fecha</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for col in cols %}
-            <tr>
-                <td class="text-center" scope="row">{{col.nombre}}</td>
-                <td class="text-center" scope="row">{{col.tipo}}</td>
-                <td class="text-center" scope="row">{{col.fecha}}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<h1 class="mt-3">Colecciones: </h1>
+
+{% if cols %}
+    {% for collection in cols %}
+        <table class="table table-bordered table-hover mt-5">
+            <thead class="table-info">
+                <tr>
+                    <th class="text-center" scope="col">NOMBRE: {{collection.nombre}}</th>
+                    <th class="text-center" scope="col">DESCRIPCIÓN: {{collection.descripcion}}</th>
+                    <th class="text-center" scope="col">FECHA: {{collection.fecha}}</th>
+                </tr>            
+            </thead>        
+            <tbody>
+                {% for model in collection.models %}
+                    <tr>
+                        <td class="text-center" scope="row">{{model.name}}</td>
+                        <td class="text-center" scope="row">{{model.description}}</td>
+                        <td class="text-center" scope="row">{{model.type}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <a href="{{url_for('set_materials_and_quantities_index', id_collection = collection.id)}}" class="btn btn-info w-100 text-center">Establecer materiales y cantidades</a>
+    {% endfor %}
+
+{% else %}
+    <div class="alert alert-info text-center mt-5">
+        Aún no hay colecciones creadas
+    </div>
+{% endif %}
 
 {% endblock %}

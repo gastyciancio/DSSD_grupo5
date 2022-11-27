@@ -43,13 +43,16 @@ def instantiate_process():
 
     api_url = "http://localhost:8080/bonita/API/bpm/case"
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
-    variables = [{'name': 'collection_id', 'value':'' }]
+    variables = [
+        {'name': 'collection_id', 'value':'' },
+        {'name': 'establish_materials_form_status', 'value': ''}
+    ]
     body = {
         "processDefinitionId":process_id,
         "variables": variables
     }
+ 
     body = json.dumps(body)
-
     res =  reqSession.post(api_url, data=body, headers=headers)
     if(res.status_code < 200 or res.status_code > 299):
         print("Fallo en instantiate process", flush=True)
@@ -123,7 +126,6 @@ def execute_next_task(type_task='userTask', name='poner nombre de tarea'):
         print("Fallo en traer tarea", flush=True)
     else:
         print("Traer tarea exitosa", flush=True)
-        breakpoint()
         tarea = res.json()[0]
         id_tarea = tarea['id']
 

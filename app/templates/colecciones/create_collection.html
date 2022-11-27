@@ -8,38 +8,34 @@
 <div class="mt-3">
     <div>
         <form action="/crear_coleccion" enctype="multipart/form-data"  method="post">
-            <div class="form-group">
-                <label for="model_name">Nombre del modelo: </label>
-                <input class="form-control" type="text" id="model_name" name="model_name" placeholder="Ingrese el nombre del modelo" required>
-            </div>
+            <div class="border border-grey p-2">
+                <div class="form-group">
+                    <label for="model_name">Nombre: </label>
+                    <input class="form-control" type="text" id="model_name" name="model_name" placeholder="Ingrese el nombre del modelo" required>
+                </div>
 
-            <div class="form-group">
-                <label for="description">Descripción: </label>
-                <input class="form-control" type="text" id="description" name="description" placeholder="Ingrese una descripción">
-            </div>
-            
-            <p>Tipo de anteojos: </p>
-            <div class="form-check">
-                <label for="glasses_type">
-                   <input class="form-check-input" type="radio" name="glasses_type" id="anteojos_sol" value="anteojos_sol">
-                   <label class="form-check-label" for="anteojos_sol">Anteojos de sol </label>
-                </label>
-            </div>
+                <div class="form-group">
+                    <label for="description">Descripción: </label>
+                    <input class="form-control" type="text" id="description" name="description" placeholder="Ingrese una descripción">
+                </div>
 
-            <div class="form-check">
-                <label for="glasses_type">
-                    <input class="form-check-input" type="radio" name="glasses_type" id="anteojos_lectura" value="anteojos_lectura"> 
-                   <label class="form-check-label" for="anteojos_lectura">Anteojos de lectura </label>
+                <label class="border border-dark btn-dark d-inline-block p-2 mt-3">
+                    <input multiple="true" type="file" name="images" id="images" class="d-none"/>
+                    Agregar imágenes
                 </label>
+            </div>    
+
+            <div class="w-100 d-flex">
+                <p class="mt-4 h4">Modelos a incluir:</p>
+                <a href="#" class="add" style="width:30px; height:30px; text-align: center; margin-top: 20px; margin-left: 30px; background:#30CD67; color:black; text-decoration: none">&plus;</a>
+                <a href="#" class="delete" style="width:30px; height:30px; text-align: center; margin-top: 20px; margin-left: 30px; background:#cd3030; color:black; text-decoration: none">&times;</a>
             </div>
-                            
-            <label class="border border-dark btn-dark d-inline-block p-2 mt-3">
-                <input multiple="true" type="file" name="images" id="images" class="d-none"/>
-                Agregar imágenes
-            </label>
+            <div name="modelsToInclude" class="inp-group">
+                
+            </div>
 
             <div class="input-control mt-3">
-              <label for="fecha">Fecha deseada de finalización: <br>
+              <label for="fecha">Fecha de lanzamiento: <br>
                   <input type="date" name="fecha" placeholder="Fecha" required>
               </label>
             </div>
@@ -47,6 +43,80 @@
             <button type="submit" class="btn btn-primary mt-3"> Guardar </button>
         </form>
     </div>
+
+
+    <script>
+        let numberModel = 0;
+        
+        const addBtn = document.querySelector(".add");
+        const deleteBtn = document.querySelector(".delete");
+
+        const input = document.querySelector(".inp-group");
+        input.id = "modelsToInclude"
+
+        function removeInput(){
+            if(numberModel > 0){
+                numberModel--;
+                input.removeChild(input.lastElementChild);
+            }                
+        }
+
+        function addInput(){
+            //creo el input para ingresar el nombre del modelo a incluir
+            if (numberModel < 10){
+                const modelName = document.createElement("input");
+                modelName.type = "text";
+                modelName.placeholder = "Ingrese el nombre del modelo";
+                modelName.style.marginRight = "20px";
+                modelName.style.width = "250px";
+                modelName.id = "modelName_" + numberModel;
+                modelName.name = "modelName_" + numberModel;
+                modelName.setAttribute('required', '');
+
+                //creo el input para ingresar la descripción del modelo a incluir
+                const modelDescription = document.createElement("input");
+                modelDescription.type = "text";
+                modelDescription.placeholder = "Ingrese la descripción del modelo";
+                modelDescription.style.marginRight = "20px";
+                modelDescription.style.width = "250px";
+                modelDescription.id = "modelDescription_" + numberModel;
+                modelDescription.name = "modelDescription_" + numberModel;
+                modelDescription.setAttribute('required', '');
+
+                //Arreglo con las opciones del dropdown
+                const array = ["Anteojos de Sol","Anteojos de Lectura"];
+                //Creación del select
+                const selectList = document.createElement("select");
+                selectList.id = "select_" + numberModel; 
+                selectList.name = "select_" + numberModel;  
+                selectList.setAttribute('required', '');         
+
+                //Append las opciones al selectList
+                for (var i = 0; i < array.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = array[i];
+                    option.text = array[i];
+                    selectList.appendChild(option);
+                }                      
+                
+                const flex = document.createElement("div");
+                flex.className = "flex";
+                flex.style.marginTop = "10px";
+                flex.name = "model_" + numberModel;
+
+                input.appendChild(flex);
+                flex.appendChild(modelName);
+                flex.appendChild(modelDescription);
+                flex.appendChild(selectList); 
+
+                numberModel ++;
+            }
+        }
+
+        addBtn.addEventListener("click", addInput);
+        deleteBtn.addEventListener("click", removeInput);
+
+    </script>
 </div>
 
 {% endblock %}
