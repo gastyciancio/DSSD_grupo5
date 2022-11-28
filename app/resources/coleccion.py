@@ -90,8 +90,11 @@ def set_materials_and_quantities():
     
     set_case_variable("/establish_materials_form_status", form_status)
 
-    #execute_next_task(name="Establecer materiales y cantidad necesarios")
+    execute_next_task(name="Establecer materiales y cantidad necesarios")
     print(params, flush=True)
+    id_collection = params['collectionId']
+    selected_collection = Coleccion.findCollectionById(id_collection)
+    return render_template("/colecciones/set_materials_and_quantities.html", col=selected_collection)
     """
     glass = params['vidrio']
     wood = params['madera']
