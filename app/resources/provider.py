@@ -1,42 +1,70 @@
 from flask import render_template, request,redirect,url_for, session
 from flask.helpers import flash
 import re
+from app.models.coleccion import Coleccion
+from app.models.material import Material
+from app.helpers.bonita_api import set_case_variable, execute_next_task
+import datetime
 
 from app.helpers.providers_maker_api import get_providers_by_data, reserve_providers_by_data, get_providers_with_only_materials
 
 def index():
-    response = get_providers_with_only_materials()
+
+    id_collection = session['id_coleccion_materials']
+    current_coleccion = Coleccion.findCollectionById(id_collection)
+    materiales_bd = Material.get_material()
+    materiales_of_collection = []
+    for material in materiales_bd:
+        if (material.coleccion_id == int(id_collection)):
+            materiales_of_collection.append(material)
+    
+    materiales_for_api = []
+
+    for material in materiales_of_collection:
+        materiales_for_api.append({
+            "name":             material.name,
+            "amount":           material.amount,
+            "date_required":    datetime.datetime.strptime(current_coleccion.fecha, '%Y-%m-%d').strftime('%d/%m/%Y')
+        })
+
+    response = get_providers_with_only_materials(materiales_for_api)
     print(response)
     materiales_sin_prov = response['metadata']['materiales_sin_proveedor']
     materiales_con_prov = response['suppliers']
     session['materiales_con_prov'] = materiales_con_prov
     session['materiales_sin_prov'] = response['metadata']['materiales_sin_proveedor']
 
-    #CAMBIAR CUANDO TENGAMOS LOS MATERIALES Y SUS CANT ESTABLECIDOS
-    materiales_pedidos = [  
-                    {
-                        "name": "Madera",
-                        "amount": 1,
-                        "date_required": "17/11/2022"
-                    },
-                    {
-                        "name": "Vidrio",
-                        "amount": 1,
-                        "date_required": "18/11/2022"
-                    }
-                ]
+    materiales_pedidos = materiales_for_api
 
     for material in materiales_pedidos:
         for supplier_with_materials in materiales_con_prov:
-            for material_prov in  supplier_with_materials['materials']:
+            for material_prov in supplier_with_materials['materials']:
                 if material_prov['name'].lower() == material['name'].lower():
                     material_prov['amount'] = material['amount']
-    
 
     return render_template('providers/reserve_providers.html',materiales_con_prov=materiales_con_prov, materiales_sin_prov=materiales_sin_prov)
 
 def search():
-    response = get_providers_by_data(request.form)
+
+    set_case_variable("/more_providers", 'si')
+
+    id_collection = session['id_coleccion_materials']
+    current_coleccion = Coleccion.findCollectionById(id_collection)
+    materiales_bd = Material.get_material()
+    materiales_of_collection = []
+    for material in materiales_bd:
+        if (material.coleccion_id == int(id_collection)):
+            materiales_of_collection.append(material)
+    
+    materiales_for_api = []
+
+    for material in materiales_of_collection:
+        materiales_for_api.append({
+            "name":             material.name,
+            "amount":           material.amount,
+            "date_required":    datetime.datetime.strptime(current_coleccion.fecha, '%Y-%m-%d').strftime('%d/%m/%Y')
+        })
+    response = get_providers_by_data(request.form, materiales_for_api)
     print(response)
     materiales_sin_prov = response['metadata']['materiales_sin_proveedor']
     materiales_con_prov = response['suppliers']
@@ -44,24 +72,15 @@ def search():
     session['materiales_sin_prov'] = response['metadata']['materiales_sin_proveedor']
 
     #CAMBIAR CUANDO TENGAMOS LOS MATERIALES Y SUS CANTIDADES ESTABLECIDOS
-    materiales_pedidos = [  
-            {
-                "name": "Madera",
-                "amount": 1,
-                "date_required": "17/11/2022"
-            },
-            {
-                "name": "Vidrio",
-                "amount": 1,
-                "date_required": "18/11/2022"
-            }
-        ]
+    materiales_pedidos = materiales_for_api
 
     for material in materiales_pedidos:
         for supplier_with_materials in materiales_con_prov:
             for material_prov in  supplier_with_materials['materials']:
                 if material_prov['name'].lower() == material['name'].lower():
                     material_prov['amount'] = material['amount']
+    
+    execute_next_task(name="Seleccionar los proveedores")
 
     return render_template('providers/reserve_providers.html',materiales_con_prov=materiales_con_prov, materiales_sin_prov=materiales_sin_prov)
 
@@ -109,6 +128,9 @@ def reserve():
     if (response !=None):
         for message in response['response']:
             flash(message)
+        set_case_variable("/more_providers", 'no')
+        execute_next_task(name="Seleccionar los proveedores")
+        return redirect(url_for("makers_form"))
     else:
         flash('Fallo la reserva de proveedores')
-    return redirect(url_for("providers_form"))
+        return redirect(url_for("providers_form"))

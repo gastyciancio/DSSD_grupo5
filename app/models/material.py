@@ -30,7 +30,6 @@ class Material(db.Model):
             amount=amount_material,
             collection_id=collection_id_material
         )
-        print(new_material, flush=True)
         db.session.add(new_material)
         db.session.commit()
 

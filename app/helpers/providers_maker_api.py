@@ -19,7 +19,7 @@ def providers_makers_auth():
     
     return res
 
-def get_providers_with_only_materials():
+def get_providers_with_only_materials(materiales_for_api):
     
     providers_makers_auth()
 
@@ -28,19 +28,20 @@ def get_providers_with_only_materials():
     api_url = 'https://apidssd.fly.dev/suppliers/by_data'
 
     #CAMBIAR POR MATERIALES QUE POSTA SE NECESITAN
-    body = { "materiales":[  
-                    {
-                        "name": "Madera",
-                        "amount": 1,
-                        "date_required": "17/11/2022"
-                    },
-                    {
-                        "name": "Vidrio",
-                        "amount": 1,
-                        "date_required": "18/11/2022"
-                    }
-                ]
-            }
+    # [  
+    #                {
+    #                    "name": "Madera",
+    #                    "amount": 1,
+    #                    "date_required": "17/11/2022"
+    #                },
+    #                {
+    #                    "name": "Vidrio",
+    #                    "amount": 1,
+    #                    "date_required": "18/11/2022"
+    #                }
+    #            ]
+    print(materiales_for_api, flush=True)
+    body = { "materiales":materiales_for_api}
 
     headers =  {'Authorization': 'Bearer '+session['token_providers']}
 
@@ -53,7 +54,8 @@ def get_providers_with_only_materials():
     return proveedores
 
 
-def get_providers_by_data(params):
+def get_providers_by_data(params, materiales_for_api):
+    print(materiales_for_api, flush=True)
 
     providers_makers_auth()
 
@@ -62,19 +64,7 @@ def get_providers_by_data(params):
     api_url = 'https://apidssd.fly.dev/suppliers/by_data'
 
     #CAMBIAR POR MATERIALES QUE POSTA SE NECESITAN
-    body = { "materiales":[  
-                    {
-                        "name": "Madera",
-                        "amount": 1,
-                        "date_required": "17/11/2022"
-                    },
-                    {
-                        "name": "Vidrio",
-                        "amount": 1,
-                        "date_required": "18/11/2022"
-                    }
-                ]
-            }
+    body = { "materiales": materiales_for_api}
     if (params['filtro_precio'] != '' and params['filtro_precio'] != None):
         body['filtro_precio'] = int(params['filtro_precio'])
     if (params['dias_extra'] != '' and params['dias_extra'] != None):
@@ -107,7 +97,7 @@ def reserve_providers_by_data(body):
         response = res.json()
     return response
     
-def get_maker_with_only_materials():
+def get_maker_with_only_materials(materiales_for_api,fecha):
     
     providers_makers_auth()
 
@@ -116,21 +106,8 @@ def get_maker_with_only_materials():
     api_url = 'https://apidssd.fly.dev/makers/by_data'
 
     #CAMBIAR POR MATERIALES QUE POSTA SE NECESITAN
-    body = { "materiales":[  
-                    {
-                        "name": "Madera",
-                        "amount": 4
-                    },
-                    {
-                        "name": "Vidrio",
-                        "amount": 7
-                    },
-                    {
-                        "name": "piso",
-                        "amount": 7
-                    }
-                ],
-                "date_deliver":"20/12/2022",
+    body = { "materiales": materiales_for_api,
+                "date_deliver": fecha,
                 "amount_glasses":10
             }
 
@@ -145,7 +122,7 @@ def get_maker_with_only_materials():
     return fabricantes
 
 
-def get_makers_by_data(params):
+def get_makers_by_data(params, materiales_for_api, fecha):
 
     providers_makers_auth()
 
@@ -154,21 +131,8 @@ def get_makers_by_data(params):
     api_url = 'https://apidssd.fly.dev/makers/by_data'
 
     #CAMBIAR POR MATERIALES QUE POSTA SE NECESITAN
-    body = { "materiales":[  
-                    {
-                        "name": "Madera",
-                        "amount": 4
-                    },
-                    {
-                        "name": "Vidrio",
-                        "amount": 7
-                    },
-                    {
-                        "name": "piso",
-                        "amount": 7
-                    }
-                ],
-                "date_deliver":"20/12/2022",
+    body = { "materiales": materiales_for_api,
+                "date_deliver": fecha,
                 "amount_glasses":10
             }
 

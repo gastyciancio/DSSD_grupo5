@@ -91,39 +91,45 @@ def set_materials_and_quantities():
     set_case_variable("/establish_materials_form_status", form_status)
 
     execute_next_task(name="Establecer materiales y cantidad necesarios")
-    print(params, flush=True)
     id_collection = params['collectionId']
-    selected_collection = Coleccion.findCollectionById(id_collection)
-    return render_template("/colecciones/set_materials_and_quantities.html", col=selected_collection)
-    """
-    glass = params['vidrio']
-    wood = params['madera']
-    plastic = params['plastico']
-    polycarbonate = params['policarbonato']
 
-    id_collection = params['collectionId']
-    selected_collection = Coleccion.findCollectionById(id_collection)
-
-    if (glass == "" or wood == "" or plastic == "" or polycarbonate == ""):
-        mensaje='Los valores deben ser numéricos'
-        flash(mensaje)
+    if(params['decition'] == "no"):
+        print(params, flush=True)
+        selected_collection = Coleccion.findCollectionById(id_collection)
         return render_template("/colecciones/set_materials_and_quantities.html", col=selected_collection)
+    else:
+        glass = params['vidrio']
+        wood = params['madera']
+        plastic = params['plastico']
+        polycarbonate = params['policarbonato']
 
-    glass = int(glass)
-    wood = int(wood)
-    plastic = int(plastic)
-    polycarbonate = int(polycarbonate)
-    
-    if(glass < 0 or wood < 0 or plastic < 0 or polycarbonate < 0):
-        mensaje='Los valores deben ser mayor o igual a 0'
-        flash(mensaje)
-        return render_template("/colecciones/set_materials_and_quantities.html", col=selected_collection)
+        selected_collection = Coleccion.findCollectionById(id_collection)
 
-    Material.save_material("vidrio", glass, id_collection)
-    Material.save_material("madera", wood, id_collection)
-    Material.save_material("plastico", plastic, id_collection)
-    Material.save_material("policarbonato", polycarbonate, id_collection)
-    """
-    allCollections = Coleccion.getAll()
-    return render_template("/home.html", cols=allCollections)
+        if (glass == "" or wood == "" or plastic == "" or polycarbonate == ""):
+            mensaje='Los valores deben ser numéricos'
+            flash(mensaje)
+            return render_template("/colecciones/set_materials_and_quantities.html", col=selected_collection)
+
+        glass = int(glass)
+        wood = int(wood)
+        plastic = int(plastic)
+        polycarbonate = int(polycarbonate)
+        
+        if(glass < 0 or wood < 0 or plastic < 0 or polycarbonate < 0):
+            mensaje='Los valores deben ser mayor o igual a 0'
+            flash(mensaje)
+            return render_template("/colecciones/set_materials_and_quantities.html", col=selected_collection)
+
+        if (glass != 0):
+            Material.save_material("vidrio", glass, id_collection)
+        if (wood != 0):
+            Material.save_material("madera", wood, id_collection)
+        if (plastic != 0):
+            Material.save_material("plastico", plastic, id_collection)
+        if (polycarbonate != 0):
+            Material.save_material("policarbonato", polycarbonate, id_collection)
+
+        session['id_coleccion_materials'] = id_collection
+
+        return redirect(url_for("providers_form"))
     

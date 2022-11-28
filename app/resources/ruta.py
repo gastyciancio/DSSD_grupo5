@@ -2,6 +2,7 @@ from flask import render_template, request
 from flask.helpers import flash
 from app.models.ruta import Ruta
 from app.helpers.bonita_api import get_case_variable_value
+from app.helpers.bonita_api import set_case_variable, execute_next_task
 
 def index():
     #Cargamos la vista del formulario
@@ -23,6 +24,12 @@ def ruta_create():
                 Ruta.save_ruta(ruta_extra,id_coleccion)
         mensaje='Se agrego la/s ruta/s'
         flash(mensaje)
+
+        #SETEO PARA ELEGIR UN RUMBO DE FLUJO FINAL
+        set_case_variable("/cambio_pedido", 'no')
+        set_case_variable("/quedan_proveedores", 'no')
+        set_case_variable("/seguir_curso_normal", 'si')
+        execute_next_task(name="Establecer las rutas involucradas")
         
         return render_template("/rutas/create_ruta.html")
     else:
