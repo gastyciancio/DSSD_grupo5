@@ -45,7 +45,9 @@ def instantiate_process():
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
     variables = [
         {'name': 'collection_id', 'value':'' },
-        {'name': 'establish_materials_form_status', 'value': ''}
+        {'name': 'establish_materials_form_status', 'value': ''},
+        {'name': 'more_providers', 'value': ''},
+        {'name': 'more_makers', 'value': ''}
     ]
     body = {
         "processDefinitionId":process_id,
@@ -64,7 +66,6 @@ def instantiate_process():
 #Setea una variable en el case con id guardado en la sesion
 #Si se hacen varios set, se hacen todos sobre el mismo case
 def set_case_variable(var_name, var_value):
-    
     reqSession = bonita_auth()
     case_id = session['case_id']
 
