@@ -13,6 +13,7 @@ from app.models.coleccion import Coleccion
 from app.resources import provider
 from app.resources import maker
 from app.resources import ruta
+from app.helpers.bonita_api import get_cases_ids_of_collections_in_task
 
 
 def create_app(environment="development"):
@@ -73,8 +74,10 @@ def create_app(environment="development"):
         if not user:
             return redirect(url_for("auth_login"))
         else:
-            allCollections = Coleccion.getAll()
-            return render_template("home.html", cols=allCollections)
+            case_id_collections_active = get_cases_ids_of_collections_in_task(name="Establecer materiales y cantidad necesarios")
+            collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+            return render_template("home.html", cols=collections)
     
     # Rutas de API-REST (usando Blueprints)
    

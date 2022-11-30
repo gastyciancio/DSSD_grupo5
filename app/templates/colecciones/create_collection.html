@@ -7,7 +7,9 @@
 <h1 class="mt-3">Crear colección</h1>
 <div class="mt-3">
     <div>
+        
         <form action="/crear_coleccion" enctype="multipart/form-data"  method="post">
+            <input type="hidden" name="case_id" value={{case_id}}>
             <div class="border border-grey p-2">
                 <div class="form-group">
                     <label for="model_name">Nombre: </label>

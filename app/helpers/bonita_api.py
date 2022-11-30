@@ -1,5 +1,6 @@
 from flask import session
 import requests, json
+from app.models.coleccion import Coleccion
 
 #Login
 def bonita_auth():
@@ -60,7 +61,7 @@ def instantiate_process():
         print("Fallo en instantiate process", flush=True)
     else:
         print("instantiate process id exitoso, id: " + res.json()['id'], flush=True)
-
+    
     session['case_id'] = res.json()['id']
 
 #Setea una variable en el case con id guardado en la sesion
@@ -162,3 +163,24 @@ def execute_next_task(type_task='userTask', name='poner nombre de tarea'):
                 else:
                     print("Traer tareas exitosa despues de ejecutar siguiente", flush=True)
                     return res.json()
+
+def get_cases_ids_of_collections_in_task(type_task='userTask', name='poner nombre de tarea'):
+    reqSession = bonita_auth()
+    
+    case_id_collections_active = []
+    collections = Coleccion.getAll()
+    for col in collections:
+        api_url = "http://localhost:8080/bonita/API/bpm/" + str(type_task) +'?f=caseId='+str(col.case_id)+'&f=name='+name
+        headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
+
+        res = reqSession.get(api_url, headers=headers)
+        if(res.status_code < 200 or res.status_code > 299):
+            print("Fallo en traer tarea", flush=True)
+        else:
+            print("Traer tarea exitosa", flush=True)
+
+        if len(res.json()) != 0:        
+            case_id_collections_active.append(res.json()[0]['rootContainerId'])
+        
+    return case_id_collections_active
+

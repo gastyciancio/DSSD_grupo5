@@ -1,6 +1,6 @@
 from flask import redirect, render_template, request, url_for, session, Response
 from flask.helpers import flash
-from app.helpers.bonita_api import instantiate_process, set_case_variable, execute_next_task
+from app.helpers.bonita_api import instantiate_process, set_case_variable, execute_next_task, get_cases_ids_of_collections_in_task
 from app.models.coleccion import Coleccion
 from app.models.model import Model
 from app.models.material import Material
@@ -11,8 +11,9 @@ def index():
 
     instantiate_process()
 
+    get_cases_ids_of_collections_in_task(name="Planificar colección, fecha y plazos")
     #Cargamos la vista del formulario
-    return render_template('colecciones/create_collection.html')
+    return render_template('colecciones/create_collection.html', case_id=session['case_id'])
 
 
 def collecion_create():
@@ -21,11 +22,11 @@ def collecion_create():
     if (params['model_name'] == '' or params['model_name'] == None):
         mensaje='Falta el nombre de la coleccion'
         flash(mensaje)
-        return render_template("/colecciones/create_collection.html")
+        return render_template("/colecciones/create_collection.html", case_id=session['case_id'])
     if (params['fecha'] == '' or params['fecha'] == None):
         mensaje='Falta la fecha de la coleccion'
         flash(mensaje)
-        return render_template("/colecciones/create_collection.html")
+        return render_template("/colecciones/create_collection.html", case_id=session['case_id'])
     
     #validar los modelos
     counter = 0
@@ -33,13 +34,13 @@ def collecion_create():
     if (len(result) != 3):
             mensaje='Debe incluir al menos un modelo a la colección'
             flash(mensaje)
-            return render_template("/colecciones/create_collection.html")
+            return render_template("/colecciones/create_collection.html", case_id=session['case_id'])
 
     while (len(result) != 0):
         if (len(result) != 3 or len(list(filter(lambda key: params[key] == "", result))) > 0):
             mensaje='Se deben completar todos los campos de los modelos a incluir'
             flash(mensaje)
-            return render_template("/colecciones/create_collection.html")
+            return render_template("/colecciones/create_collection.html", case_id=session['case_id'])
         counter = counter + 1
         result = list(filter(lambda key: key.endswith(str(counter)), params.keys()))
 
