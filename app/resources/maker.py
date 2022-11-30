@@ -47,11 +47,11 @@ def index():
     return render_template('makers/reserve_makers.html',materiales_con_fabri=materiales_con_fabri, materiales_sin_fabri=materiales_sin_fabri)
 
 def search():
-
-    set_case_variable("/more_makers", 'si')
-        
     id_collection = session['id_coleccion_materials']
     current_coleccion = Coleccion.findCollectionById(id_collection)
+
+    set_case_variable("/more_makers", 'si', current_coleccion.case_id)        
+    
     materiales_bd = Material.get_material()
     materiales_of_collection = []
     for material in materiales_bd:
@@ -83,7 +83,7 @@ def search():
                 if material_prov['name'].lower() == material['name'].lower():
                     material_prov['amount'] = material['amount']
 
-    execute_next_task(name="Seleccionar los fabricantes")
+    execute_next_task(case_id_collection=current_coleccion.case_id, name="Seleccionar los fabricantes")
     return render_template('makers/reserve_makers.html',materiales_con_fabri=materiales_con_fabri, materiales_sin_fabri=materiales_sin_fabri)
 
 

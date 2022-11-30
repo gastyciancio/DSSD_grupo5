@@ -64,12 +64,17 @@ def instantiate_process():
         print("instantiate process id exitoso, id: " + res.json()['id'], flush=True)
     
     session['case_id'] = res.json()['id']
+    return session['case_id']
 
 #Setea una variable en el case con id guardado en la sesion
 #Si se hacen varios set, se hacen todos sobre el mismo case
-def set_case_variable(var_name, var_value, type = 'String'):
+def set_case_variable(var_name, var_value, type = 'String', case_id_collection=None):
     reqSession = bonita_auth()
-    case_id = session['case_id']
+    #SACAR IF
+    if(case_id_collection == None):
+        case_id = session['case_id']
+    else:
+        case_id = case_id_collection
 
     api_url = "http://localhost:8080/bonita/API/bpm/caseVariable/" + str(case_id) + var_name
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
@@ -87,11 +92,13 @@ def set_case_variable(var_name, var_value, type = 'String'):
 
 #Setea una variable en el case con id guardado en la sesion
 #Si se hacen varios set, se hacen todos sobre el mismo case
-def get_case_variable_value(var_name, case_id=None):
+def get_case_variable_value(var_name, case_id_collection=None):
     reqSession = bonita_auth()
-
-    if(case_id == None):
+    #SACAR IF
+    if(case_id_collection == None):
         case_id = session['case_id']
+    else:
+        case_id = case_id_collection
 
     api_url = "http://localhost:8080/bonita/API/bpm/caseVariable/" + str(case_id) + var_name
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
@@ -118,10 +125,13 @@ def current_user_id():
    
 
 # EJEMPLO: execute_next_task('userTask','Planificar colección, fecha y plazos') SE PONE EL NOMBRE DE LA TAREA DONDE ESTAMOS PARADOS
-def execute_next_task(type_task='userTask', name='poner nombre de tarea', case_id=None):
+def execute_next_task(case_id_collection=None, type_task='userTask', name='poner nombre de tarea'):
     reqSession = bonita_auth()
-    if case_id == None:
+    #SACAR IF
+    if(case_id_collection == None):
         case_id = session['case_id']
+    else:
+        case_id = case_id_collection
 
     api_url = "http://localhost:8080/bonita/API/bpm/" + str(type_task) +'?f=caseId='+str(case_id)+'&f=name='+name
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}

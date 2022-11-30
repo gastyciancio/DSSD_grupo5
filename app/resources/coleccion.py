@@ -9,11 +9,11 @@ import json
 
 def index():
 
-    instantiate_process()
+    case_id=instantiate_process()
 
     get_cases_ids_of_collections_in_task(name="Planificar colección, fecha y plazos")
     #Cargamos la vista del formulario
-    return render_template('colecciones/create_collection.html', case_id=session['case_id'])
+    return render_template('colecciones/create_collection.html', case_id=case_id)
 
 
 def collecion_create():
@@ -22,11 +22,11 @@ def collecion_create():
     if (params['model_name'] == '' or params['model_name'] == None):
         mensaje='Falta el nombre de la coleccion'
         flash(mensaje)
-        return render_template("/colecciones/create_collection.html", case_id=session['case_id'])
+        return render_template("/colecciones/create_collection.html", case_id=params['case_id'])
     if (params['fecha'] == '' or params['fecha'] == None):
         mensaje='Falta la fecha de la coleccion'
         flash(mensaje)
-        return render_template("/colecciones/create_collection.html", case_id=session['case_id'])
+        return render_template("/colecciones/create_collection.html", case_id=params['case_id'])
     
     #validar los modelos
     counter = 0
@@ -34,13 +34,13 @@ def collecion_create():
     if (len(result) != 3):
             mensaje='Debe incluir al menos un modelo a la colección'
             flash(mensaje)
-            return render_template("/colecciones/create_collection.html", case_id=session['case_id'])
+            return render_template("/colecciones/create_collection.html", case_id=params['case_id'])
 
     while (len(result) != 0):
         if (len(result) != 3 or len(list(filter(lambda key: params[key] == "", result))) > 0):
             mensaje='Se deben completar todos los campos de los modelos a incluir'
             flash(mensaje)
-            return render_template("/colecciones/create_collection.html", case_id=session['case_id'])
+            return render_template("/colecciones/create_collection.html", case_id=params['case_id'])
         counter = counter + 1
         result = list(filter(lambda key: key.endswith(str(counter)), params.keys()))
 
@@ -48,8 +48,8 @@ def collecion_create():
     mensaje='Se agrego la coleccion'
     flash(mensaje)
     
-    set_case_variable("/collection_id", nueva_coleccion.id)
-    set_case_variable("/collection_creator", session['username'])
+    set_case_variable("/collection_id", nueva_coleccion.id, nueva_coleccion.case_id)
+    set_case_variable("/collection_creator", session['username'], nueva_coleccion.case_id)
 
     # Crear imagenes y agregarlas a esa coleccion
     imgs = request.files.getlist('images')
@@ -68,10 +68,11 @@ def collecion_create():
         counter = counter + 1
         result = list(filter(lambda key: key.endswith(str(counter)), params.keys()))
 
-    execute_next_task(name="Planificar colección, fecha y plazos")
+    execute_next_task(case_id_collection=nueva_coleccion.case_id, name="Planificar colección, fecha y plazos")
 
-    allCollections = Coleccion.getAll()
-    return render_template("/home.html", cols=allCollections)
+    case_id_collections_active = get_cases_ids_of_collections_in_task(name="Establecer materiales y cantidad necesarios")
+    collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+    return render_template("/home.html", cols=collections)
 
 def set_materials_and_quantities_index():
     #agarro el id de la coleccion seleccionada a la que se le van a establecer materiales
@@ -90,10 +91,12 @@ def set_materials_and_quantities():
     else:
         form_status = "aceptado"
     
-    set_case_variable("/establish_materials_form_status", form_status)
-
-    execute_next_task(name="Establecer materiales y cantidad necesarios")
     id_collection = params['collectionId']
+    selected_collection = Coleccion.findCollectionById(id_collection)
+    set_case_variable("/establish_materials_form_status", form_status, selected_collection.case_id)
+
+    execute_next_task(case_id_collection=selected_collection.case_id, name="Establecer materiales y cantidad necesarios")
+    
 
     if(params['decition'] == "no"):
         print(params, flush=True)
@@ -105,9 +108,7 @@ def set_materials_and_quantities():
         glass = params['vidrio']
         wood = params['madera']
         plastic = params['plastico']
-        polycarbonate = params['policarbonato']
-
-        selected_collection = Coleccion.findCollectionById(id_collection)
+        polycarbonate = params['policarbonato']        
 
         if (glass == "" or wood == "" or plastic == "" or polycarbonate == ""):
             mensaje='Los valores deben ser numéricos'
@@ -143,8 +144,8 @@ def colecctions_ready():
 
     return render_template("/colecciones/colecciones_ready.html", cols=collections)
 
-def lanzar(id):
-    execute_next_task(name="Lanzar la colección y distribuir",case_id = id)
+def lanzar(case_id):
+    execute_next_task(case_id_collection=case_id, name="Lanzar la colección y distribuir")
     case_id_collections_active = get_cases_ids_of_collections_in_task(name="Lanzar la colección y distribuir")
     collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
     return render_template("/colecciones/colecciones_ready.html", col=collections)
@@ -157,6 +158,7 @@ def update_index():
 def update(id):
     coleccion= Coleccion.findCollectionById(id)
    
+    print("id de la coleccion a updetear", id, flush=True)
     params = request.form
     
     if (params['model_name'] == '' or params['model_name'] == None):
@@ -169,10 +171,10 @@ def update(id):
         return render_template("/colecciones/update_collection_index.html", col=coleccion)
 
     update_coleccion = Coleccion.update_collection(params,id)
-    mensaje='Se hizo el update de la coleccion'
+    mensaje='Se actualizó la colección'
     flash(mensaje)
     
-    set_case_variable("/collection_creator", session['username'])
+    set_case_variable("/collection_creator", session['username'], coleccion.case_id)
 
     # Crear imagenes y agregarlas a esa coleccion
     #imgs = request.files.getlist('images')
@@ -183,7 +185,7 @@ def update(id):
     #    Image.delete_images(update_coleccion.id)
     #    Image.save_images(imgs, update_coleccion.id)
 
-    execute_next_task(name="Planificar colección, fecha y plazos")
+    execute_next_task(case_id_collection=coleccion.case_id, name="Planificar colección, fecha y plazos")
 
     case_id_collections_active = get_cases_ids_of_collections_in_task(name="Establecer materiales y cantidad necesarios")
     collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
