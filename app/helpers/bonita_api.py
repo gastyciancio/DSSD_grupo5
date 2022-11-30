@@ -118,9 +118,10 @@ def current_user_id():
    
 
 # EJEMPLO: execute_next_task('userTask','Planificar colección, fecha y plazos') SE PONE EL NOMBRE DE LA TAREA DONDE ESTAMOS PARADOS
-def execute_next_task(type_task='userTask', name='poner nombre de tarea'):
+def execute_next_task(type_task='userTask', name='poner nombre de tarea', case_id=None):
     reqSession = bonita_auth()
-    case_id = session['case_id']
+    if case_id == None:
+        case_id = session['case_id']
 
     api_url = "http://localhost:8080/bonita/API/bpm/" + str(type_task) +'?f=caseId='+str(case_id)+'&f=name='+name
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}

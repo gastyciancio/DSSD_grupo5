@@ -134,4 +134,15 @@ def set_materials_and_quantities():
         session['id_coleccion_materials'] = id_collection
 
         return redirect(url_for("providers_form"))
-    
+
+def colecctions_ready():
+    case_id_collections_active = get_cases_ids_of_collections_in_task(name="Lanzar la colección y distribuir")
+    collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+    return render_template("/colecciones/colecciones_ready.html", cols=collections)
+
+def lanzar(id):
+    execute_next_task(name="Lanzar la colección y distribuir",case_id = id)
+    case_id_collections_active = get_cases_ids_of_collections_in_task(name="Lanzar la colección y distribuir")
+    collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+    return render_template("/colecciones/colecciones_ready.html", col=collections)

@@ -21,6 +21,12 @@
           <a class="nav-link {{'active' if request.endpoint == '/indicators'}}" href="{{url_for('indicators')}}" >Indicadores</a>
         </li>
 
+        {% if tiene_permiso("admin") %}
+        <li class="nav-item active">
+          <a class="nav-link {{'active' if request.endpoint == '/coleccion_ready'}}" href="{{url_for('coleccion_ready')}}" >Colecciones listas</a>
+        </li>
+        {% endif %}
+
         <li class="nav-item active">
             <a class="nav-link" href="{{url_for('auth_logout')}}" style="margin-left: 650px;">Cerrar sesión</a>
         </li>

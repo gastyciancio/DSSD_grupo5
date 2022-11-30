@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+{% include 'navbar.html' %} 
+
+<h1 class="mt-3">Colecciones listas para lanzar: </h1>
+
+{% if cols %}
+    {% for collection in cols %}
+    <form action="/lanzar_coleccion/{{collection.case_id}}" enctype="multipart/form-data"  method="post">
+        <table class="table table-bordered table-hover mt-5">
+            <thead class="table-info">
+                <tr>
+                    <th class="text-center" scope="col">NOMBRE: {{collection.nombre}}</th>
+                    <th class="text-center" scope="col">DESCRIPCIÓN: {{collection.descripcion}}</th>
+                    <th class="text-center" scope="col">FECHA: {{collection.fecha}}</th>
+                </tr>            
+            </thead>        
+            <tbody>
+                {% for model in collection.models %}
+                    <tr>
+                        <td class="text-center" scope="row">{{model.name}}</td>
+                        <td class="text-center" scope="row">{{model.description}}</td>
+                        <td class="text-center" scope="row">{{model.type}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary mt-3"> Lanzar </button>
+    </form>
+    {% endfor %}
+
+{% else %}
+    <div class="alert alert-info text-center mt-5">
+        Aún no hay colecciones listas a lanzar
+    </div>
+{% endif %}
+
+{% endblock %}

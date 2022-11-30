@@ -60,6 +60,9 @@ def create_app(environment="development"):
     app.add_url_rule("/form_rutas", "rutas_form",ruta.index, methods=["GET"] )
     app.add_url_rule("/crear_rutas", "rutas_create", ruta.ruta_create ,methods=["POST"])
     app.add_url_rule("/indicators", "indicators", indicators.index, methods=["GET"])
+    app.add_url_rule("/coleccion_ready", "coleccion_ready", coleccion.colecctions_ready, methods=["GET"])
+    app.add_url_rule("/lanzar_coleccion/<int:id>", "coleccion_lanzar", coleccion.lanzar, methods=["POST"])
+
 
      # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
