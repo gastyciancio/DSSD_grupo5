@@ -68,7 +68,7 @@ def instantiate_process():
 
 #Setea una variable en el case con id guardado en la sesion
 #Si se hacen varios set, se hacen todos sobre el mismo case
-def set_case_variable(var_name, var_value, type = 'String', case_id_collection=None):
+def set_case_variable(var_name, var_value, case_id_collection=None, type = 'String'):
     reqSession = bonita_auth()
     #SACAR IF
     if(case_id_collection == None):

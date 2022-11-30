@@ -139,7 +139,7 @@ def reserve():
             if (message['message'] == 'El fabricante reservo el espacio'):
                 proveedores_reservados = proveedores_reservados + 1
         set_case_variable("/more_makers", 'no')
-        set_case_variable("/contador_proveedores", int(proveedores_reservados),'Integer')
+        set_case_variable("/contador_proveedores", int(proveedores_reservados), type ='Integer')
         execute_next_task(name="Seleccionar los fabricantes")
         return redirect(url_for("rutas_form"))
     else:
