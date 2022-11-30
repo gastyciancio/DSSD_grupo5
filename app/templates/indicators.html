@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+{% include 'navbar.html' %} 
+
+<h1 class="mt-3">Indicadores: </h1>
+
+<button class="btn btn-outline-info mt-5 btn-block" onclick="CreatorsClicked()">Colecciones creadas por usuarios</button>
+<div id="creators">
+    {% if collection_creators_dict %}
+            <table class="table table-bordered mt-4">
+                <thead class="table-info">
+                    <tr>
+                        <th class="text-center" scope="col">Creador</th>
+                        <th class="text-center" scope="col">Cantidad</th>
+                    </tr>            
+                </thead>
+                {% for key, value in collection_creators_dict.items() %}     
+                    <tbody>
+                        <tr>
+                            <td class="text-center" scope="row">{{key}}</td>
+                            <td class="text-center" scope="row">{{value}}</td>
+                        </tr>
+                    </tbody>
+                {% endfor %}
+            </table>
+    {% endif %}
+</div>
+
+
+<script>
+    //Inician ocultos
+    const form_materials = document.getElementById("creators");
+    form_materials.style.display = "none";
+    let creatorsToggle = false
+    
+    function CreatorsClicked(){
+        const form_materials = document.getElementById("creators");
+        creatorsToggle = !creatorsToggle
+
+        if(creatorsToggle){
+            form_materials.style.display = "block";
+        } else {
+            form_materials.style.display = "none";
+        }
+    }
+      
+
+</script>
+
+
+{% endblock %}
