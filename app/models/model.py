@@ -28,3 +28,13 @@ class Model(db.Model):
         db.session.commit()
 
         return new_model
+    
+    @classmethod
+    def delete_models(cls,id_collection):
+
+        models_of_collections = Model.query.all()
+
+        for model in models_of_collections:
+            if model.coleccion_id == id_collection:
+                db.session.delete(model)
+        db.session.commit()

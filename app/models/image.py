@@ -25,4 +25,13 @@ class Image(db.Model):
 
         db.session.add_all(images_to_save)
         db.session.commit()
+    
+    @staticmethod
+    def delete_images(coll_id):
 
+        images_of_collections = Image.query.all()
+
+        for image in images_of_collections:
+            if image.coleccion_id == coll_id:
+                db.session.delete(image)
+        db.session.commit()

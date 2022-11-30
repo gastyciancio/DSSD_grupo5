@@ -49,3 +49,14 @@ class Coleccion(db.Model):
 
         return new_collection
     
+    @classmethod
+    def update_collection(cls, params, id):
+        coleccion = Coleccion.query.get(id)
+        coleccion.nombre = params['model_name'],
+        coleccion.descripcion = params['description']
+        coleccion.fecha =params['fecha']
+     
+        db.session.commit()
+
+        return coleccion
+    

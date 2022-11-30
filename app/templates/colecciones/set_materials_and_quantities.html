@@ -6,6 +6,31 @@
 <h1 class="mt-3">Crear colección - Establecer Materiales</h1>
 <div class="mt-3">
     <div>
+
+        <div class="w-25 d-flex">
+            <p class="mt-4 h3">Coleccion:</p>
+        </div>
+        <div class="border border-grey p-2">
+            <table class="table table-bordered mt-3">
+                <thead class="table-info">
+                    <tr>
+                        <th class="text-center" scope="col">Nombre: </th>
+                        <th class="text-center" scope="col">Descripción: </th>
+                        <th class="text-center" scope="col">Fecha: </th>
+                    </tr>            
+                </thead>  
+                <tbody>   
+                    <tr>
+                        <td class="text-center" scope="row">{{col.nombre}}</td>
+                        <td class="text-center" scope="row">{{col.descripcion}}</td>
+                        <td class="text-center" scope="row">{{col.fecha}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>          
+
+
+
         <div class="w-25 d-flex">
             <p class="mt-4 h3">Modelos a incluir:</p>
         </div>

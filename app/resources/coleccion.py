@@ -97,8 +97,10 @@ def set_materials_and_quantities():
 
     if(params['decition'] == "no"):
         print(params, flush=True)
-        selected_collection = Coleccion.findCollectionById(id_collection)
-        return render_template("/colecciones/set_materials_and_quantities.html", col=selected_collection)
+        case_id_collections_active = get_cases_ids_of_collections_in_task(name="Establecer materiales y cantidad necesarios")
+        collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+        return render_template("home.html", cols=collections)
     else:
         glass = params['vidrio']
         wood = params['madera']
@@ -146,3 +148,45 @@ def lanzar(id):
     case_id_collections_active = get_cases_ids_of_collections_in_task(name="Lanzar la colección y distribuir")
     collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
     return render_template("/colecciones/colecciones_ready.html", col=collections)
+
+def update_index():
+    case_id_collections_active = get_cases_ids_of_collections_in_task(name="Planificar colección, fecha y plazos")
+    collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+    return render_template("/colecciones/update_collection_index.html", cols=collections)
+
+def update(id):
+    coleccion= Coleccion.findCollectionById(id)
+   
+    params = request.form
+    
+    if (params['model_name'] == '' or params['model_name'] == None):
+        mensaje='Falta el nombre de la coleccion'
+        flash(mensaje)
+        return render_template("/colecciones/update_collection_index.html", col=coleccion)
+    if (params['fecha'] == '' or params['fecha'] == None):
+        mensaje='Falta la fecha de la coleccion'
+        flash(mensaje)
+        return render_template("/colecciones/update_collection_index.html", col=coleccion)
+
+    update_coleccion = Coleccion.update_collection(params,id)
+    mensaje='Se hizo el update de la coleccion'
+    flash(mensaje)
+    
+    set_case_variable("/collection_creator", session['username'])
+
+    # Crear imagenes y agregarlas a esa coleccion
+    #imgs = request.files.getlist('images')
+    #
+    #if(len(imgs) == 1 and imgs[0].filename == ''):
+    #    print("No se agregaron imágenes a la colección creada", flush=True)
+    #else:
+    #    Image.delete_images(update_coleccion.id)
+    #    Image.save_images(imgs, update_coleccion.id)
+
+    execute_next_task(name="Planificar colección, fecha y plazos")
+
+    case_id_collections_active = get_cases_ids_of_collections_in_task(name="Establecer materiales y cantidad necesarios")
+    collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+    return render_template("home.html", cols=collections)
+   
