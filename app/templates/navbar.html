@@ -23,6 +23,12 @@
 
         {% if tiene_permiso("admin") %}
         <li class="nav-item active">
+          <a class="nav-link {{'active' if request.endpoint == '/coleccions_with_providers_problems'}}" href="{{url_for('coleccions_with_providers_problems')}}" >Colecciones con problemas proveedores</a>
+        </li>
+        {% endif %}
+
+        {% if tiene_permiso("admin") %}
+        <li class="nav-item active">
           <a class="nav-link {{'active' if request.endpoint == '/coleccion_ready'}}" href="{{url_for('coleccion_ready')}}" >Colecciones listas</a>
         </li>
         {% endif %}

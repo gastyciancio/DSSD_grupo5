@@ -190,3 +190,27 @@ def update(id):
 
     return render_template("home.html", cols=collections)
    
+def coleccions_with_providers_problems():
+    case_id_collections_active = get_cases_ids_of_collections_in_task(name="Tomar decisión sobre la colección")
+    collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+    return render_template("/colecciones/coleccions_with_providers_problems.html", cols=collections)
+
+def resolve_provider_problem(id):
+
+    set_case_variable("/seguir_curso_normal", "no")
+    execute_next_task(name="Tomar decisión sobre la colección", case_id = id)
+
+    case_id_collections_active = get_cases_ids_of_collections_in_task(name="Tomar decisión sobre la colección")
+    collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+    return render_template("/colecciones/coleccions_with_providers_problems.html", cols=collections)
+
+def ignore_provider_problem(id):
+    
+    set_case_variable("/seguir_curso_normal", "si")
+    execute_next_task(name="Tomar decisión sobre la colección", case_id = id)
+
+
+    case_id_collections_active = get_cases_ids_of_collections_in_task(name="Tomar decisión sobre la colección")
+    collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+    return render_template("/colecciones/coleccions_with_providers_problems.html", cols=collections)

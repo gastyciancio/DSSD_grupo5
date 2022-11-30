@@ -65,6 +65,10 @@ def create_app(environment="development"):
     app.add_url_rule("/coleccion_ready", "coleccion_ready", coleccion.colecctions_ready, methods=["GET"])
     app.add_url_rule("/lanzar_coleccion/<int:id>", "coleccion_lanzar", coleccion.lanzar, methods=["POST"])
 
+    app.add_url_rule("/coleccions_with_providers_problems", "coleccions_with_providers_problems", coleccion.coleccions_with_providers_problems, methods=["GET"])
+    app.add_url_rule("/ignore_provider_problem/<int:id>", "ignore_provider_problem", coleccion.ignore_provider_problem, methods=["GET"])
+    app.add_url_rule("/resolve_provider_problem/<int:id>", "resolve_provider_problem", coleccion.resolve_provider_problem, methods=["GET"])
+
 
      # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)

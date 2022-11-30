@@ -67,13 +67,13 @@ def instantiate_process():
 
 #Setea una variable en el case con id guardado en la sesion
 #Si se hacen varios set, se hacen todos sobre el mismo case
-def set_case_variable(var_name, var_value):
+def set_case_variable(var_name, var_value, type = 'String'):
     reqSession = bonita_auth()
     case_id = session['case_id']
 
     api_url = "http://localhost:8080/bonita/API/bpm/caseVariable/" + str(case_id) + var_name
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
-    body = { 'type':'java.lang.String', 'value':str(var_value) }
+    body = { 'type':'java.lang.'+type, 'value':str(var_value) }
     body = json.dumps(body)
 
     res = reqSession.put(api_url, data=body, headers=headers)
