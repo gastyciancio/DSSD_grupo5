@@ -49,6 +49,7 @@ def collecion_create():
     flash(mensaje)
     
     set_case_variable("/collection_id", nueva_coleccion.id)
+    set_case_variable("/collection_creator", session['username'])
 
     # Crear imagenes y agregarlas a esa coleccion
     imgs = request.files.getlist('images')

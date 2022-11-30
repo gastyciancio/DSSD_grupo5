@@ -18,7 +18,11 @@
         {% endif %}
         
         <li class="nav-item active">
-            <a class="nav-link" href="{{url_for('auth_logout')}}" style="margin-left: 750px;">Cerrar sesión</a>
+          <a class="nav-link {{'active' if request.endpoint == '/indicators'}}" href="{{url_for('indicators')}}" >Indicadores</a>
+        </li>
+
+        <li class="nav-item active">
+            <a class="nav-link" href="{{url_for('auth_logout')}}" style="margin-left: 650px;">Cerrar sesión</a>
         </li>
 
       </ul>

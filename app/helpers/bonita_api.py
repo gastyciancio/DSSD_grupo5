@@ -46,6 +46,7 @@ def instantiate_process():
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
     variables = [
         {'name': 'collection_id', 'value':'' },
+        {'name': 'collection_creator', 'value':'' },
         {'name': 'establish_materials_form_status', 'value': ''},
         {'name': 'more_providers', 'value': ''},
         {'name': 'more_makers', 'value': ''}
@@ -86,10 +87,11 @@ def set_case_variable(var_name, var_value):
 
 #Setea una variable en el case con id guardado en la sesion
 #Si se hacen varios set, se hacen todos sobre el mismo case
-def get_case_variable_value(var_name):
-    
+def get_case_variable_value(var_name, case_id=None):
     reqSession = bonita_auth()
-    case_id = session['case_id']
+
+    if(case_id == None):
+        case_id = session['case_id']
 
     api_url = "http://localhost:8080/bonita/API/bpm/caseVariable/" + str(case_id) + var_name
     headers = {'X-Bonita-API-Token': session['X-Bonita-API-Token']}
@@ -184,3 +186,25 @@ def get_cases_ids_of_collections_in_task(type_task='userTask', name='poner nombr
         
     return case_id_collections_active
 
+#ret: [walter, paula]
+def get_all_bonita_usernames():
+    reqSession = bonita_auth()
+    api_url = 'http://localhost:8080/bonita/API/identity/user?p=0&c=10'
+    users = (reqSession.get(api_url)).json()
+
+    return list(map(lambda user: user['userName'], users))
+
+def get_all_running_cases():
+    reqSession = bonita_auth()
+    process_id = get_process_id()
+
+    api_url = 'http://localhost:8080/bonita/API/bpm/case?p=0&c=100&f=processDefinitionId=' + process_id
+    res = reqSession.get(api_url)
+    if(res.status_code < 200 or res.status_code > 299):
+        print("Fallo en get all running cases", flush=True)
+    else:
+        print("get all running cases exitoso", flush=True)
+    
+    print(res.json(), flush=True)
+
+    return res.json()

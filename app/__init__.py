@@ -14,7 +14,7 @@ from app.resources import provider
 from app.resources import maker
 from app.resources import ruta
 from app.helpers.bonita_api import get_cases_ids_of_collections_in_task
-
+from app.resources import indicators
 
 def create_app(environment="development"):
     # Configuración inicial de la app
@@ -59,6 +59,7 @@ def create_app(environment="development"):
     app.add_url_rule("/reserve_fabricantes", "makers_reserve", maker.reserve ,methods=["POST"])
     app.add_url_rule("/form_rutas", "rutas_form",ruta.index, methods=["GET"] )
     app.add_url_rule("/crear_rutas", "rutas_create", ruta.ruta_create ,methods=["POST"])
+    app.add_url_rule("/indicators", "indicators", indicators.index, methods=["GET"])
 
      # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
