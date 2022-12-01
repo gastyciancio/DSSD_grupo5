@@ -134,7 +134,10 @@ def reserve():
             flash(message)
         set_case_variable("/more_providers", 'no', case_id)
         execute_next_task(case_id_collection=case_id, name="Seleccionar los proveedores")
-        return redirect(url_for("makers_form", current_collection_id=current_collection_id))
+        case_id_collections_active = get_cases_ids_of_collections_in_task(name="Seleccionar los proveedores")
+        collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+        return render_template("/providers/collections_in_task_select_providers.html", cols=collections)
     else:
         flash('Fallo la reserva de proveedores')
         return redirect(url_for("providers_form", current_collection_id=current_collection_id))

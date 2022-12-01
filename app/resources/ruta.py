@@ -23,6 +23,9 @@ def ruta_create():
     id_coleccion = get_case_variable_value("/collection_id", case_id)
     if (id_coleccion != None):
         id_coleccion = int(id_coleccion)
+
+        Ruta.delete_rutas_collection(id_coleccion)
+
         Ruta.save_ruta(params['ruta'],id_coleccion)
         for ruta_extra in rutas_extras:
             if (ruta_extra != ''):
@@ -32,7 +35,10 @@ def ruta_create():
 
         execute_next_task(case_id_collection=case_id, name="Establecer las rutas involucradas")
         
-        return render_template("/rutas/create_ruta.html", col_id=current_collection_id)
+        case_id_collections_active = get_cases_ids_of_collections_in_task(name="Establecer las rutas involucradas")
+        collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+        return render_template("/rutas/collections_in_task_select_routes.html", cols=collections)
     else:
         flash('No se pudo obtener el id de la coleccion a traves de bonita')
         return render_template("/rutas/create_ruta.html", col_id=current_collection_id)

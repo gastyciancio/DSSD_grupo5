@@ -136,7 +136,10 @@ def set_materials_and_quantities():
 
         session['id_coleccion_materials'] = id_collection
 
-        return redirect(url_for("providers_form", current_collection_id=id_collection))
+        case_id_collections_active = get_cases_ids_of_collections_in_task(name="Establecer materiales y cantidad necesarios")
+        collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+        return render_template("home.html", cols=collections)
 
 def colecctions_ready():
     case_id_collections_active = get_cases_ids_of_collections_in_task(name="Lanzar la colección y distribuir")
@@ -199,7 +202,7 @@ def coleccions_with_providers_problems():
 
 def resolve_provider_problem(id):
 
-    set_case_variable("/seguir_curso_normal", "no")
+    set_case_variable("/seguir_curso_normal", "no", case_id_collection = id)
     execute_next_task(name="Tomar decisión sobre la colección", case_id_collection = id)
 
     case_id_collections_active = get_cases_ids_of_collections_in_task(name="Tomar decisión sobre la colección")
@@ -208,7 +211,7 @@ def resolve_provider_problem(id):
 
 def ignore_provider_problem(id):
     
-    set_case_variable("/seguir_curso_normal", "si")
+    set_case_variable("/seguir_curso_normal", "si", case_id_collection = id)
     execute_next_task(name="Tomar decisión sobre la colección", case_id_collection = id)
 
 

@@ -144,9 +144,12 @@ def reserve():
             if (message['message'] == 'El fabricante reservo el espacio'):
                 proveedores_reservados = proveedores_reservados + 1
         set_case_variable("/more_makers", 'no', case_id_collection=case_id)
-        set_case_variable("/contador_proveedores", int(proveedores_reservados), type ='Integer')
+        set_case_variable("/contador_proveedores", int(proveedores_reservados), type ='Integer', case_id_collection=case_id)
         execute_next_task(case_id_collection=case_id, name="Seleccionar los fabricantes")
-        return redirect(url_for("rutas_form", current_collection_id=current_collection_id))
+        case_id_collections_active = get_cases_ids_of_collections_in_task(name="Seleccionar los fabricantes")
+        collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+        return render_template("/makers/collections_in_task_select_makers.html", cols=collections)
     else:
         flash('Fallo la reserva de fabricantes')
         return redirect(url_for("makers_form", current_collection_id=current_collection_id))

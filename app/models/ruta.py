@@ -28,3 +28,12 @@ class Ruta(db.Model):
         db.session.commit()
 
         return new_ruta
+    
+    @classmethod
+    def delete_rutas_collection(cls, id):
+        rutas = Ruta.query.all()
+        for ruta in rutas:
+            if ruta.coleccion_id == id:
+                db.session.delete(ruta)
+        db.session.commit()
+    
