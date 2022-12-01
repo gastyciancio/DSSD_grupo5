@@ -10,10 +10,12 @@
         <li class="nav-item active">
           <a class="navbar-brand {{'active' if request.endpoint == 'home'}}" aria-current="page" href="{{url_for('home')}}" >Inicio</a>
         </li>
-        
-        <li class="nav-item active">
-          <a class="nav-link {{'active' if request.endpoint == '/coleccion_index'}}" href="{{url_for('coleccion_index')}}" >Crear colección</a>
-        </li>
+        {% if tiene_permiso("creativo") %}
+          <li class="nav-item active">
+            <a class="nav-link {{'active' if request.endpoint == '/coleccion_index'}}" href="{{url_for('coleccion_index')}}" >Crear colección</a>
+            <a class="nav-link {{'active' if request.endpoint == '/collections_in_task_select_providers'}}" href="{{url_for('collections_in_task_select_providers_index')}}" >Colecciones en Seleccionar Proveedor</a>
+          </li>
+        {% endif %}
 
         <li class="nav-item active">
           
@@ -23,7 +25,7 @@
           <a class="nav-link {{'active' if request.endpoint == '/indicators'}}" href="{{url_for('indicators')}}" >Indicadores</a>
         </li>
 
-        {% if tiene_permiso("admin") %}
+        {% if tiene_permiso("operativo") %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Colecciones
@@ -31,7 +33,6 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="width: 300px;">
               <a class="nav-link {{'active' if request.endpoint == '/coleccion_ready'}}" href="{{url_for('coleccion_ready')}}" >Colecciones listas</a>
               <a class="nav-link {{'active' if request.endpoint == '/update_coleccion_index'}}" href="{{url_for('update_coleccion_index')}}" >Colecciones a revisar</a>
-              <a class="nav-link {{'active' if request.endpoint == '/collections_in_task_select_providers'}}" href="{{url_for('collections_in_task_select_providers_index')}}" >Colecciones en Seleccionar Proveedor</a>
               <a class="nav-link {{'active' if request.endpoint == '/collections_in_task_select_makers'}}" href="{{url_for('collections_in_task_select_makers_index')}}" >Colecciones en Seleccionar Fabricante</a>
               <a class="nav-link {{'active' if request.endpoint == '/collections_in_task_select_routes'}}" href="{{url_for('collections_in_task_select_routes_index')}}" >Colecciones en Establecer Ruta</a>
               <a class="nav-link {{'active' if request.endpoint == '/coleccions_with_providers_problems'}}" href="{{url_for('coleccions_with_providers_problems')}}" >Colecciones con problemas proveedores</a>
