@@ -34,6 +34,7 @@
               <a class="nav-link {{'active' if request.endpoint == '/collections_in_task_select_providers'}}" href="{{url_for('collections_in_task_select_providers_index')}}" >Colecciones en Seleccionar Proveedor</a>
               <a class="nav-link {{'active' if request.endpoint == '/collections_in_task_select_makers'}}" href="{{url_for('collections_in_task_select_makers_index')}}" >Colecciones en Seleccionar Fabricante</a>
               <a class="nav-link {{'active' if request.endpoint == '/collections_in_task_select_routes'}}" href="{{url_for('collections_in_task_select_routes_index')}}" >Colecciones en Establecer Ruta</a>
+              <a class="nav-link {{'active' if request.endpoint == '/coleccions_with_providers_problems'}}" href="{{url_for('coleccions_with_providers_problems')}}" >Colecciones con problemas proveedores</a>
             </div>
           </li>
         {% endif %}

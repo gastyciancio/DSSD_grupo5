@@ -75,6 +75,10 @@ def create_app(environment="development"):
     app.add_url_rule("/collections_in_task_select_providers", "collections_in_task_select_providers_index", provider.list_collections_in_task_select_providers, methods=["GET"])
     app.add_url_rule("/collections_in_task_select_makers", "collections_in_task_select_makers_index", maker.list_collections_in_task_select_makers, methods=["GET"])
     app.add_url_rule("/collections_in_task_select_routes", "collections_in_task_select_routes_index", ruta.list_collections_in_task_select_routes, methods=["GET"])
+    app.add_url_rule("/coleccions_with_providers_problems", "coleccions_with_providers_problems", coleccion.coleccions_with_providers_problems, methods=["GET"])
+    app.add_url_rule("/ignore_provider_problem/<int:id>", "ignore_provider_problem", coleccion.ignore_provider_problem, methods=["GET"])
+    app.add_url_rule("/resolve_provider_problem/<int:id>", "resolve_provider_problem", coleccion.resolve_provider_problem, methods=["GET"])
+
 
      # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)

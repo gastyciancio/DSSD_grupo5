@@ -137,10 +137,14 @@ def reserve():
 
     body = {"makers": makers}
     response = reserve_makers_by_data(body)
+    proveedores_reservados = 0
     if (response !=None):
         for message in response['response']:
-            flash(message)
-        set_case_variable("/more_makers", 'no', case_id)
+            flash(message) 
+            if (message['message'] == 'El fabricante reservo el espacio'):
+                proveedores_reservados = proveedores_reservados + 1
+        set_case_variable("/more_makers", 'no', case_id_collection=case_id)
+        set_case_variable("/contador_proveedores", int(proveedores_reservados), type ='Integer')
         execute_next_task(case_id_collection=case_id, name="Seleccionar los fabricantes")
         return redirect(url_for("rutas_form", current_collection_id=current_collection_id))
     else:

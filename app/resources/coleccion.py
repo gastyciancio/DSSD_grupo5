@@ -144,8 +144,8 @@ def colecctions_ready():
 
     return render_template("/colecciones/colecciones_ready.html", cols=collections)
 
-def lanzar(case_id):
-    execute_next_task(case_id_collection=case_id, name="Lanzar la colección y distribuir")
+def lanzar(id):
+    execute_next_task(case_id_collection=id, name="Lanzar la colección y distribuir")
     case_id_collections_active = get_cases_ids_of_collections_in_task(name="Lanzar la colección y distribuir")
     collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
     return render_template("/colecciones/colecciones_ready.html", col=collections)
@@ -192,3 +192,27 @@ def update(id):
 
     return render_template("home.html", cols=collections)
    
+def coleccions_with_providers_problems():
+    case_id_collections_active = get_cases_ids_of_collections_in_task(name="Tomar decisión sobre la colección")
+    collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+    return render_template("/colecciones/coleccions_with_providers_problems.html", cols=collections)
+
+def resolve_provider_problem(id):
+
+    set_case_variable("/seguir_curso_normal", "no")
+    execute_next_task(name="Tomar decisión sobre la colección", case_id_collection = id)
+
+    case_id_collections_active = get_cases_ids_of_collections_in_task(name="Tomar decisión sobre la colección")
+    collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+    return render_template("/colecciones/coleccions_with_providers_problems.html", cols=collections)
+
+def ignore_provider_problem(id):
+    
+    set_case_variable("/seguir_curso_normal", "si")
+    execute_next_task(name="Tomar decisión sobre la colección", case_id_collection = id)
+
+
+    case_id_collections_active = get_cases_ids_of_collections_in_task(name="Tomar decisión sobre la colección")
+    collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+    return render_template("/colecciones/coleccions_with_providers_problems.html", cols=collections)

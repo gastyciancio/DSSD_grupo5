@@ -30,10 +30,6 @@ def ruta_create():
         mensaje='Se agrego la/s ruta/s'
         flash(mensaje)
 
-        #SETEO PARA ELEGIR UN RUMBO DE FLUJO FINAL
-        set_case_variable("/cambio_pedido", 'no', case_id)
-        set_case_variable("/quedan_proveedores", 'no', case_id)
-        set_case_variable("/seguir_curso_normal", 'si', case_id)
         execute_next_task(case_id_collection=case_id, name="Establecer las rutas involucradas")
         
         return render_template("/rutas/create_ruta.html", col_id=current_collection_id)
