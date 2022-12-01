@@ -230,8 +230,6 @@ def get_all_running_cases():
     else:
         print("get all running cases exitoso", flush=True)
     
-    print(res.json(), flush=True)
-
     return res.json()
 
 def get_all_archived_cases():
@@ -244,7 +242,5 @@ def get_all_archived_cases():
         print("Fallo en get all archived cases", flush=True)
     else:
         print("get all archived cases exitoso", flush=True)
-    
-    print(res.json(), flush=True)
 
     return res.json()

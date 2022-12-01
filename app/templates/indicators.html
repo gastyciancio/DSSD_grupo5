@@ -6,47 +6,69 @@
 
 <h1 class="mt-3">Indicadores: </h1>
 
-<button class="btn btn-outline-info mt-5 btn-block" onclick="CreatorsClicked()">Colecciones creadas por usuarios</button>
+<button class="btn btn-outline-info mt-5 btn-block" onclick="clicked('creators', 0)">Colecciones activas</button>
 <div id="creators">
     {% if collection_creators_dict %}
-            <table class="table table-bordered mt-4">
-                <thead class="table-info">
+        <table class="table table-bordered mt-4">
+            <thead class="table-info">
+                <tr>
+                    <th class="text-center" scope="col">Creador</th>
+                    <th class="text-center" scope="col">Cantidad</th>
+                </tr>            
+            </thead>
+            {% for key, value in collection_creators_dict.items() %}     
+                <tbody>
                     <tr>
-                        <th class="text-center" scope="col">Creador</th>
-                        <th class="text-center" scope="col">Cantidad</th>
-                    </tr>            
-                </thead>
-                {% for key, value in collection_creators_dict.items() %}     
-                    <tbody>
-                        <tr>
-                            <td class="text-center" scope="row">{{key}}</td>
-                            <td class="text-center" scope="row">{{value}}</td>
-                        </tr>
-                    </tbody>
-                {% endfor %}
-            </table>
+                        <td class="text-center" scope="row">{{key}}</td>
+                        <td class="text-center" scope="row">{{value}}</td>
+                    </tr>
+                </tbody>
+            {% endfor %}
+        </table>
     {% endif %}
 </div>
 
+<button class="btn btn-outline-info mt-5 btn-block" onclick="clicked('archived', 1)">Colecciones terminadas</button>
+<div id="archived">
+    <table class="table table-bordered mt-4">
+        <thead class="table-info">
+            <tr>
+                <th class="text-center" scope="col">Fecha y hora de inicio</th>
+                <th class="text-center" scope="col">Fecha y hora de fin</th>
+            </tr>
+        </thead>
+        {% for dates in dates_of_archived_cases %}     
+            <tbody>
+                <tr>
+                    <td class="text-center" scope="row">{{dates['start_date']}}</td>
+                    <td class="text-center" scope="row">{{dates['end_date']}}</td>
+                </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+</div>
 
 <script>
-    //Inician ocultos
-    const form_materials = document.getElementById("creators");
-    form_materials.style.display = "none";
-    let creatorsToggle = false
-    
-    function CreatorsClicked(){
-        const form_materials = document.getElementById("creators");
-        creatorsToggle = !creatorsToggle
+    const tables = ['creators', 'archived']
+    const toggles = [0, 0]
+    initialize_tables()
 
-        if(creatorsToggle){
-            form_materials.style.display = "block";
+    function initialize_tables() {
+        tables.forEach(table => {
+            document.getElementById(table).style.display = "none";
+        })
+    }
+
+    function clicked(divId, toggleIndex){
+        const table = document.getElementById(divId);
+        toggles[toggleIndex] = !toggles[toggleIndex]
+
+        if(toggles[toggleIndex]){
+            table.style.display = "block";
         } else {
-            form_materials.style.display = "none";
+            table.style.display = "none";
         }
     }
-      
-
 </script>
 
 
