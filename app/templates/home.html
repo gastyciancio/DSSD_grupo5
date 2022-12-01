@@ -27,7 +27,9 @@
             </tbody>
         </table>
     
-        <a href="{{url_for('set_materials_and_quantities_index', id_collection = collection.id)}}" class="btn btn-info w-100 text-center">Establecer materiales y cantidades</a>
+        {% if tiene_permiso("operativo") %}
+            <a href="{{url_for('set_materials_and_quantities_index', id_collection = collection.id)}}" class="btn btn-info w-100 text-center">Establecer materiales y cantidades</a>
+        {% endif %}
     {% endfor %}
 
 {% else %}

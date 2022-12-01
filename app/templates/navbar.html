@@ -13,7 +13,9 @@
         {% if tiene_permiso("creativo") %}
           <li class="nav-item active">
             <a class="nav-link {{'active' if request.endpoint == '/coleccion_index'}}" href="{{url_for('coleccion_index')}}" >Crear colección</a>
-            <a class="nav-link {{'active' if request.endpoint == '/collections_in_task_select_providers'}}" href="{{url_for('collections_in_task_select_providers_index')}}" >Colecciones en Seleccionar Proveedor</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link {{'active' if request.endpoint == '/update_coleccion_index'}}" href="{{url_for('update_coleccion_index')}}" >Colecciones a revisar</a>
           </li>
         {% endif %}
 
@@ -32,7 +34,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="width: 300px;">
               <a class="nav-link {{'active' if request.endpoint == '/coleccion_ready'}}" href="{{url_for('coleccion_ready')}}" >Colecciones listas</a>
-              <a class="nav-link {{'active' if request.endpoint == '/update_coleccion_index'}}" href="{{url_for('update_coleccion_index')}}" >Colecciones a revisar</a>
+              <a class="nav-link {{'active' if request.endpoint == '/collections_in_task_select_providers'}}" href="{{url_for('collections_in_task_select_providers_index')}}" >Colecciones en Seleccionar Proveedor</a>
               <a class="nav-link {{'active' if request.endpoint == '/collections_in_task_select_makers'}}" href="{{url_for('collections_in_task_select_makers_index')}}" >Colecciones en Seleccionar Fabricante</a>
               <a class="nav-link {{'active' if request.endpoint == '/collections_in_task_select_routes'}}" href="{{url_for('collections_in_task_select_routes_index')}}" >Colecciones en Establecer Ruta</a>
               <a class="nav-link {{'active' if request.endpoint == '/coleccions_with_providers_problems'}}" href="{{url_for('coleccions_with_providers_problems')}}" >Colecciones con problemas proveedores</a>

@@ -32,7 +32,7 @@ def check_permission_bonita(permission):
             for membresia in membresias:
                 api_url = 'http://localhost:8080/bonita/API/identity/role/'+ membresia['role_id']
                 rol = (reqSession.get(api_url)).json()
-                if (rol['name'].lower() == 'admin'):
+                if (rol['name'].lower() == permission):
                     tiene_permiso = True
                     break
             return tiene_permiso
