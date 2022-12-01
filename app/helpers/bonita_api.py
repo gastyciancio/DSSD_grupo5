@@ -200,13 +200,24 @@ def get_cases_ids_of_collections_in_task(type_task='userTask', name='poner nombr
         
     return case_id_collections_active
 
-#ret: [walter, paula]
-def get_all_bonita_usernames():
+# Lista de nombres de los todos los usuarios con rol 'creativo'
+def get_all_bonita_designer_usernames():
     reqSession = bonita_auth()
     api_url = 'http://localhost:8080/bonita/API/identity/user?p=0&c=10'
     users = (reqSession.get(api_url)).json()
 
-    return list(map(lambda user: user['userName'], users))
+    usernames = []
+
+    for user in users:
+        api_url = 'http://localhost:8080/bonita/API/identity/membership?f=user_id='+ str(user['id'])
+        membresias = (reqSession.get(api_url)).json()
+        for membresia in membresias:
+            api_url = 'http://localhost:8080/bonita/API/identity/role/'+ membresia['role_id']
+            rol = (reqSession.get(api_url)).json()
+            if (rol['name'].lower() == 'creativo'):
+                usernames.append(user['userName'])
+
+    return usernames
 
 def get_all_running_cases():
     reqSession = bonita_auth()
@@ -218,6 +229,21 @@ def get_all_running_cases():
         print("Fallo en get all running cases", flush=True)
     else:
         print("get all running cases exitoso", flush=True)
+    
+    print(res.json(), flush=True)
+
+    return res.json()
+
+def get_all_archived_cases():
+    reqSession = bonita_auth()
+    process_id = get_process_id()
+
+    api_url = 'http://localhost:8080/bonita/API/bpm/archivedCase?p=0&c=100&f=processDefinitionId=' + process_id
+    res = reqSession.get(api_url)
+    if(res.status_code < 200 or res.status_code > 299):
+        print("Fallo en get all archived cases", flush=True)
+    else:
+        print("get all archived cases exitoso", flush=True)
     
     print(res.json(), flush=True)
 
