@@ -43,8 +43,10 @@ def create_app(environment="development"):
     app.add_url_rule("/update_coleccion/<int:id>","update_coleccion",coleccion.update, methods=["POST"] )
     app.add_url_rule("/update_coleccion_index","update_coleccion_index",coleccion.update_index, methods=["GET"] )
     app.add_url_rule("/coleccion_index","coleccion_index",coleccion.index, methods=["GET"] )
+    
     app.add_url_rule("/establecer_materiales_y_cantidades","set_materials_and_quantities",coleccion.set_materials_and_quantities, methods=["POST"] )
     app.add_url_rule("/establecer_materiales_y_cantidades_index","set_materials_and_quantities_index",coleccion.set_materials_and_quantities_index, methods=["GET"] )
+    
     app.add_url_rule("/usuarios", "usuario_index", usuario.index, methods=["POST", "GET"])
     app.add_url_rule("/usuarios/nuevo", "usuario_create", usuario.create, methods=["POST"])
     app.add_url_rule("/usuarios/update/<int:id>","usuario_update", usuario.update,methods=["POST", "GET"])
@@ -53,18 +55,26 @@ def create_app(environment="development"):
     app.add_url_rule("/usuarios/perfil", "usuario_perfil", usuario.verPerfil)
     app.add_url_rule("/usuarios/perfilUpdate/<int:id>","usuario_update_perfil",usuario.updatePerfil,methods=["POST", "GET"])
     app.add_url_rule("/usuarios/passwordUpdate/<int:id>","usuario_update_password",usuario.updatePassword,methods=["POST", "GET"])
+    
     app.add_url_rule("/form_proveedores", "providers_form",provider.index, methods=["GET"] )
     app.add_url_rule("/search_proveedores", "providers_search", provider.search ,methods=["POST"])
     app.add_url_rule("/reserve_proveedores", "providers_reserve", provider.reserve ,methods=["POST"])
+    
     app.add_url_rule("/form_fabricantes", "makers_form",maker.index, methods=["GET"] )
     app.add_url_rule("/search_fabricantes", "makers_search", maker.search ,methods=["POST"])
     app.add_url_rule("/reserve_fabricantes", "makers_reserve", maker.reserve ,methods=["POST"])
+    
     app.add_url_rule("/form_rutas", "rutas_form",ruta.index, methods=["GET"] )
     app.add_url_rule("/crear_rutas", "rutas_create", ruta.ruta_create ,methods=["POST"])
+    
     app.add_url_rule("/indicators", "indicators", indicators.index, methods=["GET"])
+    
     app.add_url_rule("/coleccion_ready", "coleccion_ready", coleccion.colecctions_ready, methods=["GET"])
     app.add_url_rule("/lanzar_coleccion/<int:id>", "coleccion_lanzar", coleccion.lanzar, methods=["POST"])
 
+    app.add_url_rule("/collections_in_task_select_providers", "collections_in_task_select_providers_index", provider.list_collections_in_task_select_providers, methods=["GET"])
+    app.add_url_rule("/collections_in_task_select_makers", "collections_in_task_select_makers_index", maker.list_collections_in_task_select_makers, methods=["GET"])
+    app.add_url_rule("/collections_in_task_select_routes", "collections_in_task_select_routes_index", ruta.list_collections_in_task_select_routes, methods=["GET"])
 
      # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)

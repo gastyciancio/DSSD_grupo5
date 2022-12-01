@@ -11,6 +11,7 @@
     <div class="mt-3">
         <div>
             <form action="/reserve_fabricantes" enctype="multipart/form-data"  method="post">
+                <input type="hidden" name="col_id" value={{col_id}}>
                 <table class="table">
                     <thead>
                         <tr>
@@ -70,7 +71,8 @@
 <div class="mt-3">
     <div>
         <form action="/search_fabricantes" enctype="multipart/form-data"  method="post">
-
+            <input type="hidden" name="col_id" value={{col_id}}>
+            
             <div class="form-group">
                 <label for="description">Filtro precio: </label>
                 <input class="form-control" type="number" id="filtro_precio" name="filtro_precio">

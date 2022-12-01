@@ -34,14 +34,14 @@
 <div class="mt-3">
     <div>
         <form action="/crear_rutas" enctype="multipart/form-data"  method="post" id="formulario">
-
+            <input type="hidden" name="col_id" value={{col_id}}>
             <div class="form-group">
                 <label for="ruta">Ruta: </label>
                 <input class="form-control" type="text" id="ruta" name="ruta" placeholder="Ingrese la ruta" required>
             </div>
-
-            <button class="btn btn-secondary mt-3" id="boton_add_ruta" onClick="add_ruta()">Agregar ruta</button>
             <p id="GFG_DOWN"></p>
+            <button class="btn btn-secondary mt-3" id="boton_add_ruta" onClick="add_ruta()">Agregar ruta</button>
+            
 
             <button type="submit" class="btn btn-primary mt-3"> Guardar </button>
         </form>
@@ -64,7 +64,7 @@
         new_ruta.setAttribute("type", "text");
         new_ruta.setAttribute("name", "ruta_extra");
         new_ruta.setAttribute("placeholder", "Ruta extra");
-        new_ruta.setAttribute("class", "form-control");
+        new_ruta.setAttribute("class", "form-control my-2");
         
         form.appendChild(new_ruta);
     }

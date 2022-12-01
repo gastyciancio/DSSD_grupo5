@@ -49,7 +49,10 @@ def instantiate_process():
         {'name': 'collection_creator', 'value':'' },
         {'name': 'establish_materials_form_status', 'value': ''},
         {'name': 'more_providers', 'value': ''},
-        {'name': 'more_makers', 'value': ''}
+        {'name': 'more_makers', 'value': ''},
+        {'name': 'cambio_pedido', 'value': ''},
+        {'name': 'quedan_proveedores', 'value': ''},
+        {'name': 'seguir_curso_normal', 'value': ''} 
     ]
     body = {
         "processDefinitionId":process_id,

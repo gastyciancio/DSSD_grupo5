@@ -136,7 +136,7 @@ def set_materials_and_quantities():
 
         session['id_coleccion_materials'] = id_collection
 
-        return redirect(url_for("providers_form"))
+        return redirect(url_for("providers_form", current_collection_id=id_collection))
 
 def colecctions_ready():
     case_id_collections_active = get_cases_ids_of_collections_in_task(name="Lanzar la colección y distribuir")

@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+{% include 'navbar.html' %} 
+
+<h1 class="mt-3">Colecciones en etapa "Seleccionar Fabricantes":</h1>
+
+{% if cols %}
+    {% for collection in cols %}
+        <table class="table table-bordered table-hover mt-5">
+            <thead class="table-info">
+                <tr>
+                    <th class="text-center" scope="col">NOMBRE: {{collection.nombre}}</th>
+                    <th class="text-center" scope="col">DESCRIPCIÓN: {{collection.descripcion}}</th>
+                    <th class="text-center" scope="col">FECHA: {{collection.fecha}}</th>
+                    <th class="text-center" scope="col">MATERIALES:</th>
+                </tr>            
+            </thead>        
+            <tbody>
+                {% for model in collection.models %}
+                    <tr>
+                        <td class="text-center" scope="row">{{model.name}}</td>
+                        <td class="text-center" scope="row">{{model.description}}</td>
+                        <td class="text-center" scope="row">{{model.type}}</td>
+                        <td class="text-center" scope="row">{% for material in collection.materiales %} {{material.name}} {% endfor %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <a href="{{url_for('makers_form', current_collection_id = collection.id)}}" class="btn btn-info w-100 text-center">Seleccionar fabricantes</a>
+    {% endfor %}
+
+{% else %}
+    <div class="alert alert-info text-center mt-5">
+        Aún no hay colecciones que esten en esta tarea
+    </div>
+{% endif %}
+
+{% endblock %}
