@@ -29,24 +29,30 @@
 </div>
 
 <button class="btn btn-outline-info mt-5 btn-block" onclick="clicked('archived', 1)">Colecciones terminadas</button>
-<div id="archived">
-    <table class="table table-bordered mt-4">
-        <thead class="table-info">
-            <tr>
-                <th class="text-center" scope="col">Fecha y hora de inicio</th>
-                <th class="text-center" scope="col">Fecha y hora de fin</th>
-            </tr>
-        </thead>
-        {% for dates in dates_of_archived_cases %}     
-            <tbody>
+{% if dates_of_archived_cases is defined and dates_of_archived_cases|length > 0 %}
+    <div id="archived">
+        <table class="table table-bordered mt-4">
+            <thead class="table-info">
                 <tr>
-                    <td class="text-center" scope="row">{{dates['start_date']}}</td>
-                    <td class="text-center" scope="row">{{dates['end_date']}}</td>
+                    <th class="text-center" scope="col">Fecha y hora de inicio</th>
+                    <th class="text-center" scope="col">Fecha y hora de fin</th>
                 </tr>
-            </tbody>
-        {% endfor %}
-    </table>
-</div>
+            </thead>
+            {% for dates in dates_of_archived_cases %}     
+                <tbody>
+                    <tr>
+                        <td class="text-center" scope="row">{{dates['start_date']}}</td>
+                        <td class="text-center" scope="row">{{dates['end_date']}}</td>
+                    </tr>
+                </tbody>
+            {% endfor %}
+        </table>
+    </div>
+{% else %}
+    <div id="archived" class="alert alert-info text-center mt-5">
+        Aún no hay colecciones terminadas
+    </div>
+{% endif %}
 
 <script>
     const tables = ['creators', 'archived']

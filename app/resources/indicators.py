@@ -16,7 +16,8 @@ def get_collection_creators_and_amounts():
     
     for case_id in all_running_cases_ids:
         creator = get_case_variable_value("/collection_creator", case_id)
-        username_created_collections[creator] += 1
+        if(creator != ''):
+            username_created_collections[creator] += 1
     
     return username_created_collections
 
