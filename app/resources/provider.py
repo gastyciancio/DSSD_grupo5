@@ -3,16 +3,16 @@ from flask.helpers import flash
 import re
 from app.models.coleccion import Coleccion
 from app.models.material import Material
-from app.helpers.bonita_api import set_case_variable, execute_next_task, get_cases_ids_of_collections_in_task
+from app.helpers.bonita_api import set_case_variable, execute_next_task, get_cases_ids_of_collections_in_task, get_case_variable_value
 import datetime
+import json
 
 from app.helpers.providers_maker_api import get_providers_by_data, reserve_providers_by_data, get_providers_with_only_materials
 
 def index():
     current_collection_id = request.args['current_collection_id']
-
-    #id_collection = session['id_coleccion_materials']
     current_coleccion = Coleccion.findCollectionById(current_collection_id)
+    
     materiales_bd = Material.get_material()
     materiales_of_collection = []
     for material in materiales_bd:
@@ -28,8 +28,8 @@ def index():
             "date_required":    datetime.datetime.strptime(current_coleccion.fecha, '%Y-%m-%d').strftime('%d/%m/%Y')
         })
 
-    response = get_providers_with_only_materials(materiales_for_api)
-    print(response)
+    response = json.loads(get_case_variable_value("/materiales_proveedores_response", current_coleccion.case_id))
+
     materiales_sin_prov = response['metadata']['materiales_sin_proveedor']
     materiales_con_prov = response['suppliers']
     session['materiales_con_prov'] = materiales_con_prov
@@ -65,8 +65,19 @@ def search():
             "amount":           material.amount,
             "date_required":    datetime.datetime.strptime(current_collection.fecha, '%Y-%m-%d').strftime('%d/%m/%Y')
         })
-    response = get_providers_by_data(request.form, materiales_for_api)
-    print(response)
+    
+    params = request.form
+    body = { "materiales": materiales_for_api}
+    if (params['filtro_precio'] != '' and params['filtro_precio'] != None):
+        body['filtro_precio'] = int(params['filtro_precio'])
+    if (params['dias_extra'] != '' and params['dias_extra'] != None):
+        body['dias_extra'] = int(params['dias_extra'])
+
+    set_case_variable("/materiales_proveedores", json.dumps(body), current_collection.case_id)
+    """
+    response = json.loads(get_case_variable_value("/materiales_proveedores_response", current_collection.case_id))
+    print("aaaaaaaas", flush=True)
+    print(response, flush=True)
     materiales_sin_prov = response['metadata']['materiales_sin_proveedor']
     materiales_con_prov = response['suppliers']
     session['materiales_con_prov'] = materiales_con_prov
@@ -80,10 +91,11 @@ def search():
             for material_prov in  supplier_with_materials['materials']:
                 if material_prov['name'].lower() == material['name'].lower():
                     material_prov['amount'] = material['amount']
-    
+    """
     execute_next_task(case_id_collection=current_collection.case_id, name="Seleccionar los proveedores")
 
-    return render_template('providers/reserve_providers.html',materiales_con_prov=materiales_con_prov, materiales_sin_prov=materiales_sin_prov, col_id = current_collection_id)
+    return redirect(url_for("providers_form", current_collection_id=current_collection_id))
+    #return render_template('providers/reserve_providers.html',materiales_con_prov=materiales_con_prov, materiales_sin_prov=materiales_sin_prov, col_id = current_collection_id)
 
 
 def reserve():

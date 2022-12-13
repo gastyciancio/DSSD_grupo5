@@ -219,6 +219,25 @@ def get_all_bonita_designer_usernames():
 
     return usernames
 
+# Lista de nombres de los todos los usuarios con rol 'operativo'
+def get_all_bonita_operative_usernames():
+    reqSession = bonita_auth()
+    api_url = 'http://localhost:8080/bonita/API/identity/user?p=0&c=10'
+    users = (reqSession.get(api_url)).json()
+
+    usernames = []
+
+    for user in users:
+        api_url = 'http://localhost:8080/bonita/API/identity/membership?f=user_id='+ str(user['id'])
+        membresias = (reqSession.get(api_url)).json()
+        for membresia in membresias:
+            api_url = 'http://localhost:8080/bonita/API/identity/role/'+ membresia['role_id']
+            rol = (reqSession.get(api_url)).json()
+            if (rol['name'].lower() == 'operativo'):
+                usernames.append(user['userName'])
+
+    return usernames
+
 def get_all_running_cases():
     reqSession = bonita_auth()
     process_id = get_process_id()

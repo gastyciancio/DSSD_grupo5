@@ -1,11 +1,13 @@
 from flask import redirect, render_template, request, url_for, session, Response
 from flask.helpers import flash
-from app.helpers.bonita_api import instantiate_process, set_case_variable, execute_next_task, get_cases_ids_of_collections_in_task
+from app.helpers.bonita_api import get_all_bonita_operative_usernames, instantiate_process, set_case_variable, execute_next_task, get_cases_ids_of_collections_in_task
 from app.models.coleccion import Coleccion
 from app.models.model import Model
 from app.models.material import Material
 from app.models.image import Image
 import json
+import random
+import datetime
 
 def index():
 
@@ -68,6 +70,9 @@ def collecion_create():
         counter = counter + 1
         result = list(filter(lambda key: key.endswith(str(counter)), params.keys()))
 
+    operative_usernames = get_all_bonita_operative_usernames() 
+    random_operative = random.choice(operative_usernames)
+    set_case_variable("/asignado_a_tarea", random_operative, nueva_coleccion.case_id)
     execute_next_task(case_id_collection=nueva_coleccion.case_id, name="Planificar colección, fecha y plazos")
 
     case_id_collections_active = get_cases_ids_of_collections_in_task(name="Establecer materiales y cantidad necesarios")
@@ -138,6 +143,24 @@ def set_materials_and_quantities():
 
         case_id_collections_active = get_cases_ids_of_collections_in_task(name="Establecer materiales y cantidad necesarios")
         collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+        #seteo variable materiales_proveedores de bonita
+        materiales_bd = Material.get_material()
+        materiales_of_collection = []
+        for material in materiales_bd:
+            if (material.coleccion_id == int(id_collection)):
+                materiales_of_collection.append(material)
+        
+        materiales_for_api = []
+
+        for material in materiales_of_collection:
+            materiales_for_api.append({
+                "name":             material.name,
+                "amount":           material.amount,
+                "date_required":    datetime.datetime.strptime(selected_collection.fecha, '%Y-%m-%d').strftime('%d/%m/%Y')
+            })
+
+        set_case_variable("/materiales_proveedores", json.dumps({"materiales":materiales_for_api}), selected_collection.case_id)
 
         return render_template("home.html", cols=collections)
 
