@@ -19,67 +19,6 @@ def providers_makers_auth():
     
     return res
 
-def get_providers_with_only_materials(materiales_for_api):
-    
-    providers_makers_auth()
-
-    reqSession = requests.Session()
-
-    api_url = 'https://apidssd.fly.dev/suppliers/by_data'
-
-    #CAMBIAR POR MATERIALES QUE POSTA SE NECESITAN
-    # [  
-    #                {
-    #                    "name": "Madera",
-    #                    "amount": 1,
-    #                    "date_required": "17/11/2022"
-    #                },
-    #                {
-    #                    "name": "Vidrio",
-    #                    "amount": 1,
-    #                    "date_required": "18/11/2022"
-    #                }
-    #            ]
-    print(materiales_for_api, flush=True)
-    body = { "materiales":materiales_for_api}
-
-    headers =  {'Authorization': 'Bearer '+session['token_providers']}
-
-    res = reqSession.post(api_url, json=body, headers=headers)
-    proveedores = None
-    if(res.status_code < 200 or res.status_code > 299):
-        print("Fallo obtener proveedores by data", flush=True)
-    else:
-        proveedores = res.json()
-    return proveedores
-
-
-def get_providers_by_data(params, materiales_for_api):
-    print(materiales_for_api, flush=True)
-
-    providers_makers_auth()
-
-    reqSession = requests.Session()
-
-    api_url = 'https://apidssd.fly.dev/suppliers/by_data'
-
-    #CAMBIAR POR MATERIALES QUE POSTA SE NECESITAN
-    body = { "materiales": materiales_for_api}
-    if (params['filtro_precio'] != '' and params['filtro_precio'] != None):
-        body['filtro_precio'] = int(params['filtro_precio'])
-    if (params['dias_extra'] != '' and params['dias_extra'] != None):
-        body['dias_extra'] = int(params['dias_extra'])
-
-    headers =  {'Authorization': 'Bearer '+session['token_providers']}
-
-    res = reqSession.post(api_url, json=body, headers=headers)
-    proveedores = None
-    if(res.status_code < 200 or res.status_code > 299):
-        print("Fallo obtener proveedores by data", flush=True)
-    else:
-        proveedores = res.json()
-    return proveedores
-
 def reserve_providers_by_data(body):
     providers_makers_auth()
 
@@ -96,60 +35,6 @@ def reserve_providers_by_data(body):
     else:
         response = res.json()
     return response
-    
-def get_maker_with_only_materials(materiales_for_api,fecha):
-    
-    providers_makers_auth()
-
-    reqSession = requests.Session()
-
-    api_url = 'https://apidssd.fly.dev/makers/by_data'
-
-    #CAMBIAR POR MATERIALES QUE POSTA SE NECESITAN
-    body = { "materiales": materiales_for_api,
-                "date_deliver": fecha,
-                "amount_glasses":10
-            }
-
-    headers =  {'Authorization': 'Bearer '+session['token_providers']}
-
-    res = reqSession.post(api_url, json=body, headers=headers)
-    fabricantes = None
-    if(res.status_code < 200 or res.status_code > 299):
-        print("Fallo obtener fabricantes by data", flush=True)
-    else:
-        fabricantes = res.json()
-    return fabricantes
-
-
-def get_makers_by_data(params, materiales_for_api, fecha):
-
-    providers_makers_auth()
-
-    reqSession = requests.Session()
-
-    api_url = 'https://apidssd.fly.dev/makers/by_data'
-
-    #CAMBIAR POR MATERIALES QUE POSTA SE NECESITAN
-    body = { "materiales": materiales_for_api,
-                "date_deliver": fecha,
-                "amount_glasses":10
-            }
-
-    if (params['filtro_precio'] != '' and params['filtro_precio'] != None):
-        body['filtro_precio'] = int(params['filtro_precio'])
-    if (params['dias_extra'] != '' and params['dias_extra'] != None):
-        body['dias_extra'] = int(params['dias_extra'])
-
-    headers =  {'Authorization': 'Bearer '+session['token_providers']}
-
-    res = reqSession.post(api_url, json=body, headers=headers)
-    fabricantes = None
-    if(res.status_code < 200 or res.status_code > 299):
-        print("Fallo obtener fabricantes by data", flush=True)
-    else:
-        fabricantes = res.json()
-    return fabricantes
 
 def reserve_makers_by_data(body):
     providers_makers_auth()
@@ -167,4 +52,3 @@ def reserve_makers_by_data(body):
     else:
         response = res.json()
     return response
-    

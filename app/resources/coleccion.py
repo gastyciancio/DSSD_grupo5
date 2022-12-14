@@ -1,6 +1,6 @@
 from flask import redirect, render_template, request, url_for, session, Response
 from flask.helpers import flash
-from app.helpers.bonita_api import get_all_bonita_operative_usernames, instantiate_process, set_case_variable, execute_next_task, get_cases_ids_of_collections_in_task
+from app.helpers.bonita_api import get_case_variable_value,get_all_bonita_operative_usernames, instantiate_process, set_case_variable, execute_next_task, get_cases_ids_of_collections_in_task
 from app.models.coleccion import Coleccion
 from app.models.model import Model
 from app.models.material import Material
@@ -13,7 +13,7 @@ def index():
 
     case_id=instantiate_process()
 
-    get_cases_ids_of_collections_in_task(name="Planificar colección, fecha y plazos")
+    #get_cases_ids_of_collections_in_task(name="Planificar colección, fecha y plazos")
     #Cargamos la vista del formulario
     return render_template('colecciones/create_collection.html', case_id=case_id)
 
@@ -159,9 +159,10 @@ def set_materials_and_quantities():
                 "amount":           material.amount,
                 "date_required":    datetime.datetime.strptime(selected_collection.fecha, '%Y-%m-%d').strftime('%d/%m/%Y')
             })
-
-        set_case_variable("/materiales_proveedores", json.dumps({"materiales":materiales_for_api}), selected_collection.case_id)
-
+ 
+        body = {"materiales": materiales_for_api}
+        set_case_variable("/materiales_proveedores", json.dumps(body), selected_collection.case_id)
+       
         return render_template("home.html", cols=collections)
 
 def colecctions_ready():

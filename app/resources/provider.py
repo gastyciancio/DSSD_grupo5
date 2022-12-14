@@ -7,7 +7,7 @@ from app.helpers.bonita_api import set_case_variable, execute_next_task, get_cas
 import datetime
 import json
 
-from app.helpers.providers_maker_api import get_providers_by_data, reserve_providers_by_data, get_providers_with_only_materials
+from app.helpers.providers_maker_api import reserve_providers_by_data
 
 def index():
     current_collection_id = request.args['current_collection_id']
@@ -28,8 +28,9 @@ def index():
             "date_required":    datetime.datetime.strptime(current_coleccion.fecha, '%Y-%m-%d').strftime('%d/%m/%Y')
         })
 
+    print(get_case_variable_value("/materiales_proveedores", current_coleccion.case_id), flush=True)
     response = json.loads(get_case_variable_value("/materiales_proveedores_response", current_coleccion.case_id))
-
+    print(response, flush=True)
     materiales_sin_prov = response['metadata']['materiales_sin_proveedor']
     materiales_con_prov = response['suppliers']
     session['materiales_con_prov'] = materiales_con_prov
@@ -74,34 +75,18 @@ def search():
         body['dias_extra'] = int(params['dias_extra'])
 
     set_case_variable("/materiales_proveedores", json.dumps(body), current_collection.case_id)
-    """
-    response = json.loads(get_case_variable_value("/materiales_proveedores_response", current_collection.case_id))
-    print("aaaaaaaas", flush=True)
-    print(response, flush=True)
-    materiales_sin_prov = response['metadata']['materiales_sin_proveedor']
-    materiales_con_prov = response['suppliers']
-    session['materiales_con_prov'] = materiales_con_prov
-    session['materiales_sin_prov'] = response['metadata']['materiales_sin_proveedor']
-
-    #CAMBIAR CUANDO TENGAMOS LOS MATERIALES Y SUS CANTIDADES ESTABLECIDOS
-    materiales_pedidos = materiales_for_api
-
-    for material in materiales_pedidos:
-        for supplier_with_materials in materiales_con_prov:
-            for material_prov in  supplier_with_materials['materials']:
-                if material_prov['name'].lower() == material['name'].lower():
-                    material_prov['amount'] = material['amount']
-    """
+    
     execute_next_task(case_id_collection=current_collection.case_id, name="Seleccionar los proveedores")
 
     return redirect(url_for("providers_form", current_collection_id=current_collection_id))
     #return render_template('providers/reserve_providers.html',materiales_con_prov=materiales_con_prov, materiales_sin_prov=materiales_sin_prov, col_id = current_collection_id)
 
 
-def reserve():
+def reserve():    
     current_collection_id = request.form['col_id']
+    current_collection = Coleccion.findCollectionById(current_collection_id)
     case_id = Coleccion.findCollectionById(current_collection_id).case_id
-
+    amount_glasses = 10
     provedores_elegidos = request.form.getlist("seleccionar_proveedor")
     valores = []
     for proveedor in provedores_elegidos:
@@ -148,6 +133,25 @@ def reserve():
         execute_next_task(case_id_collection=case_id, name="Seleccionar los proveedores")
         case_id_collections_active = get_cases_ids_of_collections_in_task(name="Seleccionar los proveedores")
         collections = Coleccion.findCollectionByCaseId(case_id_collections_active)
+
+        #seteo variable materiales_fabricantes de bonita
+        materiales_bd = Material.get_material()
+        materiales_of_collection = []
+        for material in materiales_bd:
+            if (material.coleccion_id == int(current_collection_id)):
+                materiales_of_collection.append(material)
+        
+        materiales_for_api = []
+
+        for material in materiales_of_collection:
+            materiales_for_api.append({
+                "name":             material.name,
+                "amount":           material.amount
+            })
+        
+        fecha = datetime.datetime.strptime(current_collection.fecha, '%Y-%m-%d').strftime('%d/%m/%Y')   
+        body = {"materiales":materiales_for_api, "date_deliver": fecha, "amount_glasses":amount_glasses}      
+        set_case_variable("/materiales_fabricantes", json.dumps(body), case_id)
 
         return render_template("/providers/collections_in_task_select_providers.html", cols=collections)
     else:
