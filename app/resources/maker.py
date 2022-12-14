@@ -30,8 +30,6 @@ def index():
 
     fecha = datetime.datetime.strptime(current_coleccion.fecha, '%Y-%m-%d').strftime('%d/%m/%Y')
     response = json.loads(get_case_variable_value("/materiales_fabricantes_response", current_coleccion.case_id))
-    
-    print("bbbbbbbbbbbbbbbbbbbbb", flush=True)
     print(response, flush=True)
     materiales_sin_fabri = response['metadata']['materiales_sin_fabricante']
     materiales_con_fabri = response['makers']
